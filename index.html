@@ -41,21 +41,6 @@
 </script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <link rel="stylesheet" href="./styles.css">
-<script>
-// Respaldo anti-minificadores: si la media query CSS no llegara a aplicarse
-// (por un proxy/optimizador que corrompe el bloque @media), forzamos el
-// layout mobile igual mediante esta clase, calculada por el ancho real de
-// pantalla. Se ejecuta antes de pintar la página para evitar parpadeos.
-(function(){
-  function checkMobileLayout(){
-    var isMobile = window.innerWidth <= 860;
-    document.documentElement.classList.toggle('force-mobile', isMobile);
-  }
-  checkMobileLayout();
-  window.addEventListener('resize', checkMobileLayout);
-  window.addEventListener('orientationchange', checkMobileLayout);
-})();
-</script>
 </head>
 <body>
 <div id="app"></div>
