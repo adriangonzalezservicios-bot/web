@@ -1,0 +1,7 @@
+name = "akari-mercadopago-worker"
+main = "worker-create-preference.js"
+compatibility_date = "2024-11-01"
+
+# El Access Token de Mercado Pago NO va acá.
+# Configuralo como secret con:
+#   wrangler secret put MP_ACCESS_TOKEN

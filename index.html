@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKARI Electro & Home — Tecnología, hogar y accesorios</title>
+<meta name="description" content="Descubrí tecnología, hogar y accesorios deslizando: AKARI aprende lo que te gusta. Comprá con Mercado Pago, envío a domicilio o retiro en tienda.">
+<link rel="canonical" href="https://www.akarielectrohome.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AKARI Electro & Home">
+<meta property="og:title" content="AKARI Electro & Home — Tecnología, hogar y accesorios">
+<meta property="og:description" content="Tienda discovery: deslizá, descubrí y comprá productos de tecnología, hogar y accesorios pensados para vos.">
+<meta property="og:image" content="./logo-mascot.png">
+<meta property="og:url" content="https://www.akarielectrohome.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AKARI Electro & Home">
+<meta name="twitter:description" content="Descubrí tecnología, hogar y accesorios deslizando. AKARI aprende tus gustos.">
+<meta name="twitter:image" content="./logo-mascot.png">
+<link rel="icon" href="./logo-mascot.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "AKARI Electro & Home",
+  "description": "Tienda online de descubrimiento de tecnología, hogar y accesorios.",
+  "image": "https://www.akarielectrohome.com/logo-mascot.png",
+  "url": "https://www.akarielectrohome.com/",
+  "priceRange": "$$",
+  "paymentAccepted": "Mercado Pago, Efectivo",
+  "areaServed": "AR"
+}
+</script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root{
+  --brand:#6b8f35;
+  --brand-dark:#587529;
+  --bg:#f6f7f9;
+  --text:#0f1218;
+  --soft:#f4f7ec;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --mp:#009ee3;
+  --white:#ffffff;
+  --r-sm:12px;
+  --r-md:16px;
+  --r-lg:24px;
+  --shadow:0 1px 2px rgba(15,18,24,.04), 0 8px 24px -12px rgba(15,18,24,.10);
+  --sidebar-w:248px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+.icon{width:18px;height:18px;stroke-width:2}
+
+/* ---------- Layout ---------- */
+#app{display:flex;min-height:100vh}
+.sidebar{
+  width:var(--sidebar-w);flex:none;background:var(--white);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh;
+}
+.brand-row{display:flex;align-items:center;gap:10px;padding:6px 8px 18px}
+.brand-mark{width:36px;height:36px;border-radius:var(--r-sm);background:var(--brand);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.brand-name{font-weight:800;font-size:16px;line-height:1.1}
+.brand-tag{font-size:11px;color:var(--muted);text-transform:lowercase}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:14px}
+.search-box input{border:none;background:transparent;outline:none;font-size:13px;width:100%;color:var(--text)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-sm);font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+.nav-item:hover{background:var(--soft)}
+.nav-item.active{background:var(--soft);color:var(--brand-dark)}
+.nav-item.active svg{color:var(--brand)}
+.sidebar-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+.admin-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer}
+.admin-dot:hover{background:var(--muted)}
+
+.topbar{display:none;position:sticky;top:0;z-index:30;background:var(--white);border-bottom:1px solid var(--border);align-items:center;gap:10px;padding:12px 14px}
+.topbar .brand-row{padding:0}
+.icon-btn{background:none;border:none;padding:8px;border-radius:var(--r-sm);display:flex}
+.icon-btn:hover{background:var(--soft)}
+.drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,18,24,.4);z-index:40}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:78%;max-width:300px;background:#fff;z-index:41;padding:18px 14px;transform:translateX(-100%);transition:transform .2s ease}
+.drawer.open{transform:translateX(0)}
+.drawer-backdrop.open{display:block}
+
+main{flex:1;min-width:0}
+.container{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+@media (max-width:860px){
+  .sidebar{display:none}
+  .topbar{display:flex}
+  .container{padding:18px 16px 90px}
+}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:999px;border:none;font-weight:700;font-size:14px;transition:transform .15s ease,opacity .15s ease}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-dark)}
+.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--brand)}
+.btn-mp{background:var(--mp);color:#fff}
+.btn-block{width:100%}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn-danger{background:#fff;color:#c0362c;border:1px solid #f1c6c1}
+
+/* ---------- Hero / Home ---------- */
+.hero{background:var(--soft);border-radius:var(--r-lg);padding:48px 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;margin-bottom:36px}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;color:var(--brand-dark);margin-bottom:16px}
+.hero h1{font-size:38px;line-height:1.12;margin:0 0 12px;font-weight:800;letter-spacing:-.5px}
+.hero p{color:var(--muted);font-size:16px;line-height:1.55;margin:0 0 22px;max-width:46ch}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero-visual{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:18px;box-shadow:var(--shadow)}
+@media (max-width:860px){.hero{grid-template-columns:1fr;padding:28px 20px}.hero h1{font-size:28px}.hero-visual{display:none}}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px 20px}
+.stat-num{font-size:26px;font-weight:800}
+.stat-label{color:var(--muted);font-size:13px;margin-top:2px}
+@media (max-width:640px){.stats-row{grid-template-columns:1fr}}
+
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px}
+.section-head h2{font-size:20px;font-weight:800;margin:0}
+.section-head a{font-size:13px;font-weight:700;color:var(--brand-dark);display:flex;align-items:center;gap:4px}
+section.block{margin-bottom:40px}
+
+.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.benefit-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px}
+.benefit-card .ico{width:38px;height:38px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--brand-dark);margin-bottom:10px}
+.benefit-card h3{font-size:14px;margin:0 0 4px}
+.benefit-card p{font-size:12.5px;color:var(--muted);margin:0;line-height:1.4}
+@media (max-width:860px){.benefits{grid-template-columns:repeat(2,1fr)}}
+
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{background:#fff;border:1px solid var(--border);padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700}
+.pill.active,.pill:hover{border-color:var(--brand);color:var(--brand-dark);background:var(--soft)}
+
+.grid-products{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:960px){.grid-products{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.grid-products{grid-template-columns:repeat(2,1fr)}}
+.card-prod{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.card-prod .imgwrap{aspect-ratio:1/1;background:var(--soft);overflow:hidden}
+.card-prod img{width:100%;height:100%;object-fit:cover}
+.card-prod .body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.card-prod .cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;font-weight:700}
+.card-prod .title{font-size:13.5px;font-weight:700;line-height:1.3;min-height:34px}
+.card-prod .price-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.price{font-weight:800;font-size:15px}
+.price-orig{font-size:12px;color:var(--muted);text-decoration:line-through}
+.match-badge{position:absolute;top:10px;right:10px;background:rgba(15,18,24,.78);color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px}
+.card-prod .add-btn{margin-top:8px}
+
+/* ---------- Feed swipe ---------- */
+.feed-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
+.feed-stage{position:relative;width:100%;max-width:340px;height:440px}
+.swipe-card{position:absolute;inset:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;user-select:none;touch-action:pan-y;cursor:grab}
+.swipe-card .imgwrap{flex:1;background:var(--soft);overflow:hidden}
+.swipe-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.swipe-card .info{padding:14px 16px 16px}
+.swipe-card .cat{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.swipe-card .title{font-weight:800;font-size:16px;margin:2px 0 6px}
+.swipe-card .price{font-size:17px;font-weight:800;color:var(--brand-dark)}
+.swipe-stamp{position:absolute;top:20px;padding:6px 14px;border:3px solid;border-radius:8px;font-weight:900;font-size:18px;letter-spacing:.05em;opacity:0;transform:rotate(-14deg)}
+.swipe-stamp.like{left:18px;color:var(--brand-dark);border-color:var(--brand-dark)}
+.swipe-stamp.skip{right:18px;color:#c0362c;border-color:#c0362c;transform:rotate(14deg)}
+.feed-actions{display:flex;align-items:center;gap:14px}
+.round-btn{width:52px;height:52px;border-radius:50%;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.round-btn.skip{color:#c0362c}
+.round-btn.like{color:var(--brand-dark)}
+.round-btn.add{width:60px;height:60px;background:var(--brand);color:#fff;border:none}
+.feed-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 20px}
+
+.suggested-strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px}
+.sugg-card{flex:0 0 150px;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.sugg-card .imgwrap{aspect-ratio:1/1;background:var(--soft)}
+.sugg-card img{width:100%;height:100%;object-fit:cover}
+.sugg-card .why{font-size:10.5px;color:var(--brand-dark);font-weight:700;padding:8px 10px 0}
+.sugg-card .title{font-size:12px;font-weight:700;padding:2px 10px 10px;line-height:1.3}
+
+.seo-text{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 30px;color:var(--muted);font-size:13.5px;line-height:1.7}
+.seo-text h2{color:var(--text);font-size:18px;margin-top:0}
+.seo-text h3{color:var(--text);font-size:14px}
+
+footer{border-top:1px solid var(--border);background:#fff;margin-top:20px}
+.footer-inner{max-width:1180px;margin:0 auto;padding:32px 24px 22px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px}
+.footer-inner h4{font-size:13px;margin:0 0 10px}
+.footer-inner a{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.footer-inner a:hover{color:var(--brand-dark)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);max-width:1180px;margin:0 auto}
+@media (max-width:860px){.footer-inner{grid-template-columns:1fr 1fr}}
+
+/* ---------- Filters / product list ---------- */
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+
+/* ---------- Cart ---------- */
+.cart-item{display:flex;gap:14px;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:12px;margin-bottom:10px}
+.cart-item img{width:72px;height:72px;object-fit:cover;border-radius:10px;background:var(--soft)}
+.cart-item .info{flex:1;min-width:0}
+.cart-item .name{font-weight:700;font-size:13.5px}
+.cart-item .cat{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:700}
+.qty-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-btn{width:26px;height:26px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center}
+.qty-val{font-weight:700;font-size:13px;min-width:18px;text-align:center}
+.remove-link{font-size:12px;color:#c0362c;font-weight:700;display:flex;align-items:center;gap:4px;margin-top:6px}
+.summary-box{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px}
+.summary-row{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:var(--muted)}
+.summary-row.total{color:var(--text);font-weight:800;font-size:16px;border-top:1px solid var(--border);padding-top:10px;margin-top:10px}
+.cart-layout{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.cart-layout{grid-template-columns:1fr}}
+
+/* ---------- Forms ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13.5px;font-family:inherit;background:#fff;color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.option-card{border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px;background:#fff}
+.option-card input{width:auto}
+.option-card.selected{border-color:var(--brand);background:var(--soft)}
+.option-card .ot{font-weight:700;font-size:13.5px}
+.option-card .os{font-size:12px;color:var(--muted)}
+
+/* ---------- Success ---------- */
+.success-wrap{text-align:center;padding:60px 20px;max-width:460px;margin:0 auto}
+.success-ico{width:72px;height:72px;border-radius:50%;background:var(--soft);color:var(--brand-dark);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.ref-box{background:#fff;border:1px dashed var(--border);border-radius:var(--r-md);padding:14px;font-weight:800;font-size:16px;letter-spacing:.05em;margin:16px 0}
+
+/* ---------- Live ---------- */
+.live-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:30px;text-align:center;max-width:520px;margin:0 auto}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:#fee2e2;color:#c0362c;font-weight:800;font-size:12px;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+
+/* ---------- Contact ---------- */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.contact-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.contact-card .ico{width:38px;height:38px;border-radius:10px;background:var(--soft);color:var(--brand-dark);display:flex;align-items:center;justify-content:center;flex:none}
+
+/* ---------- Admin ---------- */
+.admin-login-wrap{max-width:360px;margin:60px auto;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:28px}
+.admin-tabs{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--border);margin-bottom:20px}
+.admin-tab{padding:10px 14px;font-size:13px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.admin-tab.active{color:var(--brand-dark);border-color:var(--brand)}
+.admin-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+table.admin-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+table.admin-table th,table.admin-table td{padding:10px 12px;font-size:12.5px;text-align:left;border-bottom:1px solid var(--border)}
+table.admin-table th{background:var(--soft);font-weight:800;color:var(--brand-dark)}
+table.admin-table tr:last-child td{border-bottom:none}
+.badge-ok{background:var(--soft);color:var(--brand-dark);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.badge-off{background:#f1f5f9;color:var(--muted);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,18,24,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:#fff;border-radius:var(--r-lg);padding:24px;max-width:480px;width:100%;max-height:88vh;overflow-y:auto}
+.modal h3{margin-top:0}
+.admin-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:20px;margin-bottom:16px}
+.admin-card h3{margin:0 0 14px;font-size:14px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.switch{position:relative;width:40px;height:22px;background:var(--border);border-radius:999px;border:none;flex:none}
+.switch.on{background:var(--brand)}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .15s}
+.switch.on::after{transform:translateX(18px)}
+.color-swatch{width:28px;height:28px;border-radius:8px;border:1px solid var(--border)}
+.mini{font-size:11.5px;color:var(--muted)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:60;box-shadow:var(--shadow)}
+.empty-state{text-align:center;color:var(--muted);padding:50px 20px;font-size:13.5px}
+.cart-fab{position:fixed;bottom:18px;right:18px;background:var(--brand);color:#fff;border:none;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);z-index:20}
+.cart-fab .count{position:absolute;top:-4px;right:-4px;background:#c0362c;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+@media (min-width:861px){.cart-fab{display:none}}
+
+.whatsapp-fab{position:fixed;bottom:18px;left:18px;background:#25D366;color:#fff;border:none;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);z-index:25;transition:transform .15s ease}
+.whatsapp-fab:hover{transform:scale(1.06)}
+.whatsapp-fab svg{width:28px;height:28px}
+@media (max-width:860px){.whatsapp-fab{bottom:82px;width:50px;height:50px}.whatsapp-fab svg{width:26px;height:26px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* =========================================================
+   AKARI Electro & Home — index.html vanilla (front estático)
+   Backend: Supabase (opcional, con fallback demo local)
+   Pagos: Mercado Pago vía Cloudflare Worker
+   ========================================================= */
+
+/* ---------- 1. Config: pegar acá URL y anon key de Supabase ---------- */
+const SUPABASE_URL = "https://khlsqzwtauctaqtqmuxd.supabase.co";        // ej: "https://xxxx.supabase.co"
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtobHNxend0YXVjdGFxdHFtdXhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwOTU3NjQsImV4cCI6MjEwMjY3MTc2NH0.Ha_zE5vqNaGgc-ZlKzhVvxErynr9IOAh6Shf-it263A";   // clave anon pública (nunca service_role)
+const HAS_SUPABASE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+/* ---------- 2. Utilidades ---------- */
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+const uid = () => Math.random().toString(36).slice(2,10);
+const lsGet = (k, fallback) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch(e){ return fallback; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+function fmtMoney(n){
+  const cur = state.settings.currency || 'ARS';
+  try {
+    return new Intl.NumberFormat('es-AR', { style:'currency', currency: cur, maximumFractionDigits:0 }).format(n);
+  } catch(e){ return '$' + Math.round(n).toLocaleString('es-AR'); }
+}
+function toast(msg){
+  $$('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2200);
+}
+function icons(){ if(window.lucide) lucide.createIcons(); }
+
+/* ---------- 3. Datos demo (fallback sin Supabase) ---------- */
+const DEMO_PRODUCTS = [
+  {id:'p1',title:'Auriculares Bluetooth AKARI Pulse', brand:'AKARI', category:'Tecnología', price:24999, original_price:32999, match_score:96, image_url:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600', sort_order:1, active:true},
+  {id:'p2',title:'Parlante portátil resistente al agua', brand:'SoundGo', category:'Tecnología', price:18999, original_price:0, match_score:91, image_url:'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600', sort_order:2, active:true},
+  {id:'p3',title:'Smartwatch AKARI Fit 2', brand:'AKARI', category:'Tecnología', price:39999, original_price:47999, match_score:98, image_url:'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600', sort_order:3, active:true},
+  {id:'p4',title:'Cargador rápido 30W USB-C', brand:'ZapCharge', category:'Tecnología', price:8999, original_price:0, match_score:88, image_url:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600', sort_order:4, active:true},
+  {id:'p5',title:'Set de sábanas 400 hilos', brand:'Casa Nova', category:'Hogar', price:27999, original_price:0, match_score:85, image_url:'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600', sort_order:5, active:true},
+  {id:'p6',title:'Difusor de aromas con luz LED', brand:'Aroma+', category:'Hogar', price:15999, original_price:19999, match_score:93, image_url:'https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600', sort_order:6, active:true},
+  {id:'p7',title:'Set de 4 tazas de cerámica', brand:'Casa Nova', category:'Hogar', price:9999, original_price:0, match_score:80, image_url:'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600', sort_order:7, active:true},
+  {id:'p8',title:'Organizador modular de cocina', brand:'OrdenaYa', category:'Hogar', price:12999, original_price:0, match_score:78, image_url:'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600', sort_order:8, active:true},
+  {id:'p9',title:'Mochila urbana antirrobo', brand:'UrbanGo', category:'Accesorios', price:21999, original_price:26999, match_score:90, image_url:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600', sort_order:9, active:true},
+  {id:'p10',title:'Lentes de sol polarizados', brand:'SunLine', category:'Accesorios', price:11999, original_price:0, match_score:82, image_url:'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600', sort_order:10, active:true},
+  {id:'p11',title:'Billetera de cuero minimalista', brand:'UrbanGo', category:'Accesorios', price:9999, original_price:0, match_score:76, image_url:'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600', sort_order:11, active:true},
+  {id:'p12',title:'Correa deportiva para smartwatch', brand:'AKARI', category:'Accesorios', price:5999, original_price:0, match_score:87, image_url:'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600', sort_order:12, active:true},
+];
+const DEFAULT_SETTINGS = {
+  brand_name:'AKARI', brand_tagline:'electro & home',
+  color_brand:'#6b8f35', color_bg:'#f6f7f9', color_text:'#0f1218', logo_url:'',
+  hero_title:'Descubrí productos que sí te van a gustar',
+  hero_text:'Deslizá tecnología, hogar y accesorios como en tu red favorita. AKARI aprende de cada Me gusta para mostrarte más de lo que buscás — y menos de lo que no.',
+  pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
+  whatsapp:'5491122334455', email:'hola@akarielectrohome.com', currency:'ARS',
+  live_active:true, live_title:'Facebook Live: nuevos ingresos de la semana', live_when:'Viernes 19:00 hs', live_url:'https://facebook.com/akarielectrohome/live'
+};
+
+/* ---------- 4. Estado global ---------- */
+const state = {
+  products: [],
+  settings: {...DEFAULT_SETTINGS},
+  cart: lsGet('akari_cart', []),
+  session: lsGet('akari_admin_session', null),
+  route: location.hash || '#/',
+  drawerOpen: false,
+  productFilter: 'Todas',
+  lastOrder: lsGet('akari_last_order', null),
+};
+
+/* ---------- 5. Cliente Supabase minimal (REST) — solo si hay claves ---------- */
+async function sb(path, opts={}){
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...opts,
+    headers:{
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${state.session?.access_token || SUPABASE_ANON_KEY}`,
+      'Content-Type':'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...(opts.headers||{})
+    }
+  });
+  if(!res.ok){ const t = await res.text().catch(()=> ''); throw new Error(t || res.statusText); }
+  return res.status===204 ? null : res.json();
+}
+async function loadData(){
+  if(HAS_SUPABASE){
+    try{
+      const [prods, settingsRows] = await Promise.all([
+        sb('products?select=*&order=sort_order.asc'),
+        sb('site_settings?select=*&id=eq.1')
+      ]);
+      state.products = (prods||[]).filter(p=>p.active !== false);
+      if(settingsRows && settingsRows[0]) state.settings = {...DEFAULT_SETTINGS, ...settingsRows[0]};
+    }catch(e){
+      console.warn('Supabase no disponible, uso modo demo:', e.message);
+      state.products = lsGet('akari_demo_products', DEMO_PRODUCTS).filter(p=>p.active);
+      state.settings = {...DEFAULT_SETTINGS, ...lsGet('akari_demo_settings', {})};
+    }
+  } else {
+    state.products = lsGet('akari_demo_products', DEMO_PRODUCTS).filter(p=>p.active);
+    state.settings = {...DEFAULT_SETTINGS, ...lsGet('akari_demo_settings', {})};
+  }
+  applyTheme();
+}
+function allDemoProducts(){ return lsGet('akari_demo_products', DEMO_PRODUCTS); }
+function saveDemoProducts(list){ lsSet('akari_demo_products', list); }
+function saveDemoSettings(s){ lsSet('akari_demo_settings', s); }
+
+function applyTheme(){
+  document.documentElement.style.setProperty('--brand', state.settings.color_brand || '#6b8f35');
+  // color-dark aproximado: mismo tono, solo lo usamos con brand por simplicidad
+  document.documentElement.style.setProperty('--brand-dark', state.settings.color_brand || '#587529');
+  document.documentElement.style.setProperty('--bg', state.settings.color_bg || '#f6f7f9');
+  document.documentElement.style.setProperty('--text', state.settings.color_text || '#0f1218');
+}
+
+/* ---------- 6. Motor de gustos v2 (localStorage: akari_prefs_v2) ---------- */
+const PREFS_KEY = 'akari_prefs_v2';
+function loadPrefs(){
+  return lsGet(PREFS_KEY, { categories:{}, brands:{}, priceSum:0, priceCount:0, seen:{}, skipped:{}, session:[] });
+}
+function savePrefs(p){ lsSet(PREFS_KEY, p); }
+function recordSignal(product, type){
+  // type: 'like' (+2), 'cart' (+3), 'skip' (-1.5), 'view' (0, solo novelty/fatiga)
+  const prefs = loadPrefs();
+  const weight = type==='like'?2:type==='cart'?3:type==='skip'?-1.5:0;
+  if(weight !== 0){
+    prefs.categories[product.category] = (prefs.categories[product.category]||0)*0.9 + weight;
+    prefs.brands[product.brand] = (prefs.brands[product.brand]||0)*0.9 + weight;
+    if(weight > 0){ prefs.priceSum += product.price; prefs.priceCount += 1; }
+  }
+  if(type==='skip') prefs.skipped[product.id] = (prefs.skipped[product.id]||0)+1;
+  prefs.seen[product.id] = (prefs.seen[product.id]||0)+1;
+  prefs.session.push(product.id);
+  if(prefs.session.length>40) prefs.session.shift();
+  savePrefs(prefs);
+}
+function scoreProduct(product, prefs){
+  let score = (product.match_score||70)/100; // base
+  score += (prefs.categories[product.category]||0) * 0.12;
+  score += (prefs.brands[product.brand]||0) * 0.08;
+  const avgPrice = prefs.priceCount ? prefs.priceSum/prefs.priceCount : null;
+  if(avgPrice){ const diff = Math.abs(product.price-avgPrice)/avgPrice; score -= Math.min(diff,1)*0.15; }
+  if(!prefs.seen[product.id]) score += 0.18; // novelty
+  const fatigue = prefs.seen[product.id]||0;
+  score -= Math.min(fatigue*0.1, 0.4);
+  score -= Math.min((prefs.skipped[product.id]||0)*0.3, 0.9);
+  score += Math.random()*0.06; // ruido leve
+  return score;
+}
+function buildFeed(){
+  const prefs = loadPrefs();
+  const pool = [...state.products];
+  let scored = pool.map(p=>({p, s:scoreProduct(p, prefs)})).sort((a,b)=>b.s-a.s);
+  // ~15% exploración: mezclar un ítem random cada 6 posiciones
+  const explore = 0.15;
+  let ordered = [];
+  const rest = [...scored];
+  while(rest.length){
+    if(Math.random() < explore && rest.length>1){
+      const idx = Math.floor(Math.random()*rest.length);
+      ordered.push(rest.splice(idx,1)[0]);
+    } else {
+      ordered.push(rest.shift());
+    }
+  }
+  // diversidad: evitar 3 seguidas de misma categoría
+  const final = [];
+  for(const item of ordered){
+    if(final.length>=2 && final[final.length-1].p.category===item.p.category && final[final.length-2].p.category===item.p.category){
+      const swapIdx = ordered.findIndex((o,i)=> o!==item && o.p.category!==item.p.category);
+      // simple: solo empujar al final
+      final.push(item);
+    } else {
+      final.push(item);
+    }
+  }
+  return final.map(x=>x.p);
+}
+
+/* ---------- 7. Carrito ---------- */
+function saveCart(){ lsSet('akari_cart', state.cart); }
+function addToCart(product, qty=1){
+  const existing = state.cart.find(i=>i.id===product.id);
+  if(existing) existing.qty += qty;
+  else state.cart.push({id:product.id, title:product.title, price:product.price, image_url:product.image_url, category:product.category, qty});
+  saveCart();
+  recordSignal(product,'cart');
+  toast('Agregado al carrito');
+  render();
+}
+function updateQty(id, delta){
+  const item = state.cart.find(i=>i.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) state.cart = state.cart.filter(i=>i.id!==id);
+  saveCart(); render();
+}
+function removeFromCart(id){ state.cart = state.cart.filter(i=>i.id!==id); saveCart(); render(); }
+function cartTotal(){ return state.cart.reduce((s,i)=>s+i.price*i.qty,0); }
+function cartCount(){ return state.cart.reduce((s,i)=>s+i.qty,0); }
+
+/* ---------- 8. Router ---------- */
+window.addEventListener('hashchange', ()=>{ state.route = location.hash || '#/'; state.drawerOpen=false; window.scrollTo(0,0); render(); });
+
+/* ---------- 9. Render: shell (sidebar / topbar) ---------- */
+const NAV_ITEMS = [
+  {href:'#/', label:'Inicio', icon:'home'},
+  {href:'#/productos', label:'Productos', icon:'grid-3x3'},
+  {href:'#/carrito', label:'Carrito', icon:'shopping-cart'},
+  {href:'#/vivo', label:'En vivo', icon:'radio'},
+  {href:'#/contacto', label:'Contacto', icon:'mail'},
+];
+function isActive(href){ return (state.route==='#/' ? '#/' : state.route) === href || (href!=='#/' && state.route.startsWith(href)); }
+
+function shellHTML(innerHTML){
+  const s = state.settings;
+  return `
+  <aside class="sidebar">
+    <div class="brand-row">
+      <div class="brand-mark">${(s.brand_name||'A')[0]}</div>
+      <div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div>
+    </div>
+    <div class="search-box"><i data-lucide="search" class="icon" style="color:var(--muted)"></i><input id="search-input-desk" placeholder="Buscar productos..." value=""></div>
+    <nav>
+      ${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}"><i data-lucide="${n.icon}" class="icon"></i>${n.label}${n.href==='#/carrito' && cartCount() ? ` <span class="mini">(${cartCount()})</span>`:''}</a>`).join('')}
+    </nav>
+    <div class="sidebar-foot"><span>© ${new Date().getFullYear()} ${s.brand_name}</span><button class="admin-dot" title="Admin" onclick="location.hash='#/admin'">·</button></div>
+  </aside>
+
+  <div class="topbar">
+    <button class="icon-btn" onclick="toggleDrawer(true)"><i data-lucide="menu" class="icon"></i></button>
+    <div class="brand-row"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div class="brand-name">${s.brand_name}</div></div>
+    <div style="flex:1"></div>
+    <a class="icon-btn" href="#/carrito" style="position:relative"><i data-lucide="shopping-cart" class="icon"></i></a>
+  </div>
+  <div class="drawer-backdrop ${state.drawerOpen?'open':''}" onclick="toggleDrawer(false)"></div>
+  <div class="drawer ${state.drawerOpen?'open':''}">
+    <div class="brand-row"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div></div>
+    <nav>${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}" onclick="toggleDrawer(false)"><i data-lucide="${n.icon}" class="icon"></i>${n.label}</a>`).join('')}</nav>
+  </div>
+
+  <main>
+    <div class="container">${innerHTML}</div>
+    ${footerHTML()}
+  </main>
+  <button class="cart-fab" onclick="location.hash='#/carrito'"><i data-lucide="shopping-cart" class="icon"></i>${cartCount()?`<span class="count">${cartCount()}</span>`:''}</button>
+  ${whatsappFabHTML()}
+  `;
+}
+function whatsappFabHTML(){
+  const s = state.settings;
+  if(!s.whatsapp) return '';
+  const text = encodeURIComponent(`Hola! Tengo una consulta sobre ${s.brand_name} ${s.brand_tagline}.`);
+  return `
+  <a class="whatsapp-fab" href="https://wa.me/${s.whatsapp}?text=${text}" target="_blank" rel="noopener" title="Escribinos por WhatsApp" aria-label="Escribinos por WhatsApp">
+    <svg viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M16.02 3C9.4 3 4 8.37 4 15c0 2.36.7 4.55 1.9 6.4L4 29l7.8-1.85A11.9 11.9 0 0 0 16.02 27C22.63 27 28 21.63 28 15S22.63 3 16.02 3Zm0 21.8c-1.95 0-3.77-.57-5.3-1.55l-.38-.24-4.63 1.1 1.13-4.5-.25-.39A9.7 9.7 0 0 1 5.2 15c0-5.97 4.86-10.8 10.82-10.8 5.97 0 10.8 4.83 10.8 10.8s-4.83 10.8-10.8 10.8Zm5.92-8.09c-.32-.16-1.9-.94-2.2-1.05-.3-.1-.51-.16-.73.16-.21.32-.84 1.05-1.03 1.26-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.58-1.6-.95-.85-1.6-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.14.32-.38.48-.56.16-.19.21-.32.32-.54.1-.21.05-.4-.03-.56-.08-.16-.73-1.76-1-2.41-.26-.63-.53-.54-.73-.55h-.62c-.21 0-.56.08-.85.4-.3.32-1.11 1.09-1.11 2.65 0 1.56 1.14 3.07 1.3 3.28.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.9-.78 2.17-1.53.27-.75.27-1.4.19-1.53-.08-.14-.29-.22-.61-.38Z"/></svg>
+  </a>`;
+}
+function toggleDrawer(v){ state.drawerOpen=v; render(); }
+function footerHTML(){
+  const s = state.settings;
+  return `
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="brand-row" style="padding-bottom:8px"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div class="brand-name">${s.brand_name}</div></div>
+        <p class="mini" style="max-width:32ch;line-height:1.5">Tienda de descubrimiento de tecnología, hogar y accesorios. Deslizá, descubrí, comprá.</p>
+      </div>
+      <div><h4>Tienda</h4>
+        <a href="#/productos">Productos</a><a href="#/">Para ti</a><a href="#/vivo">En vivo</a>
+      </div>
+      <div><h4>Ayuda</h4>
+        <a href="#/contacto">Contacto</a><a href="#/carrito">Mi carrito</a>
+      </div>
+      <div><h4>Contacto</h4>
+        <a href="mailto:${s.email}">${s.email}</a>
+        <a href="https://wa.me/${s.whatsapp}" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© ${new Date().getFullYear()} ${s.brand_name} ${s.brand_tagline}. Todos los derechos reservados.</span>
+      <button class="admin-dot" title="admin" onclick="location.hash='#/admin'">·</button>
+    </div>
+  </footer>`;
+}
+
+/* ---------- 10. Vista: Inicio ---------- */
+function viewHome(){
+  const s = state.settings;
+  const cats = ['Todas', ...new Set(state.products.map(p=>p.category))];
+  const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
+  return `
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><i data-lucide="sparkles" class="icon" style="width:14px;height:14px"></i> Discovery shopping</span>
+      <h1>${s.hero_title}</h1>
+      <p>${s.hero_text}</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#/productos"><i data-lucide="grid-3x3" class="icon"></i>Ver catálogo</a>
+        <a class="btn btn-outline" href="#feed-section" onclick="document.getElementById('feed-section').scrollIntoView({behavior:'smooth'})"><i data-lucide="hand" class="icon"></i>Descubrir para mí</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="${destacados[0]?.image_url||''}" alt="${destacados[0]?.title||''}" style="border-radius:16px;aspect-ratio:4/3;object-fit:cover">
+    </div>
+  </section>
+
+  <section class="stats-row block">
+    <div class="stat-card"><div class="stat-num">${state.products.length}+</div><div class="stat-label">productos activos</div></div>
+    <div class="stat-card"><div class="stat-num">${new Set(state.products.map(p=>p.category)).size}</div><div class="stat-label">categorías</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--mp)">MP</div><div class="stat-label">Pagos con Mercado Pago</div></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>Por qué comprar en ${s.brand_name}</h2></div>
+    <div class="benefits">
+      <div class="benefit-card"><div class="ico"><i data-lucide="sparkles" class="icon"></i></div><h3>Feed que aprende</h3><p>Cuanto más deslizás, mejor te conoce.</p></div>
+      <div class="benefit-card"><div class="ico"><i data-lucide="truck" class="icon"></i></div><h3>Envío o retiro</h3><p>Elegís cómo recibir tu pedido.</p></div>
+      <div class="benefit-card"><div class="ico"><i data-lucide="shield-check" class="icon"></i></div><h3>Pago seguro</h3><p>Mercado Pago o coordinación directa.</p></div>
+      <div class="benefit-card"><div class="ico"><i data-lucide="message-circle" class="icon"></i></div><h3>Soporte real</h3><p>Te acompañamos por WhatsApp.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>Categorías</h2></div>
+    <div class="pills">${cats.map(c=>`<a class="pill" href="#/productos?cat=${encodeURIComponent(c)}">${c}</a>`).join('')}</div>
+  </section>
+
+  <section class="block" id="feed-section">
+    <div class="section-head"><h2>Para ti</h2><span class="mini">Deslizá para descubrir</span></div>
+    ${feedHTML()}
+  </section>
+
+  <section class="block">
+    <div class="section-head"><h2>Destacados</h2><a href="#/productos">Ver todo <i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i></a></div>
+    <div class="grid-products">${destacados.map(productCardHTML).join('')}</div>
+  </section>
+
+  <section class="block">
+    <div class="seo-text">
+      <h2>Tecnología, hogar y accesorios que se adaptan a vos</h2>
+      <p>${s.brand_name} ${s.brand_tagline} es una tienda online pensada para que descubras productos de <strong>tecnología</strong>, <strong>hogar</strong> y <strong>accesorios</strong> sin perder tiempo filtrando catálogos interminables. Deslizá en nuestro feed «Para ti», indicá qué te gusta y qué no, y dejá que el sistema arme sugerencias cada vez más precisas para tu categoría, marca y rango de precio favoritos.</p>
+      <h3>Comprá con confianza</h3>
+      <p>Pagá con Mercado Pago, coordiná un pago a convenir o aboná en el retiro en tienda. Elegí envío a domicilio o retiro sin costos ocultos. Todos los pedidos quedan registrados y podés seguir el estado por WhatsApp.</p>
+      <p><a href="#/productos">Ver catálogo completo</a> · <a href="#/vivo">Próximo Live</a> · <a href="#/contacto">Hablar con nosotros</a></p>
+    </div>
+  </section>
+  `;
+}
+
+/* ---------- 11. Feed swipe ---------- */
+let feedState = { items: [], index: 0 };
+function feedHTML(){
+  feedState.items = buildFeed();
+  if(!feedState.items.length) return `<div class="feed-empty">Todavía no hay productos para mostrarte. Volvé pronto.</div>`;
+  feedState.index = 0;
+  return `
+  <div class="feed-wrap">
+    <div class="feed-stage" id="feed-stage"></div>
+    <div class="feed-actions">
+      <button class="round-btn skip" onclick="feedAction('skip')" title="Saltar"><i data-lucide="x" class="icon"></i></button>
+      <button class="round-btn like" onclick="feedAction('like')" title="Me gusta"><i data-lucide="heart" class="icon"></i></button>
+      <button class="round-btn add" onclick="feedAction('cart')" title="Agregar"><i data-lucide="shopping-cart" class="icon"></i></button>
+    </div>
+  </div>
+  <div class="section-head" style="margin-top:26px"><h2 style="font-size:15px">Sugeridos para vos</h2></div>
+  <div class="suggested-strip" id="suggested-strip"></div>
+  `;
+}
+function renderFeedStage(){
+  const stage = $('#feed-stage');
+  if(!stage) return;
+  stage.innerHTML='';
+  const items = feedState.items.slice(feedState.index, feedState.index+2);
+  if(!items.length){ stage.innerHTML = `<div class="feed-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);border-radius:24px">Reiniciando sugerencias...</div>`; icons(); setTimeout(()=>{feedState.index=0; renderFeedStage();},900); return; }
+  items.slice().reverse().forEach((p,i)=>{
+    const isTop = (i===items.length-1);
+    const card = document.createElement('div');
+    card.className='swipe-card';
+    card.style.transform = isTop ? 'none' : 'scale(.94) translateY(10px)';
+    card.style.zIndex = isTop? 2:1;
+    card.dataset.id = p.id;
+    card.innerHTML = `
+      <div class="swipe-stamp like">ME GUSTA</div>
+      <div class="swipe-stamp skip">PASO</div>
+      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}"></div>
+      <div class="info">
+        <div class="cat">${p.category}</div>
+        <div class="title">${p.title}</div>
+        <div class="price">${fmtMoney(p.price)}</div>
+      </div>
+      <div class="match-badge" style="top:14px;right:14px">${p.match_score||70}% match</div>
+    `;
+    stage.appendChild(card);
+    if(isTop) attachDrag(card, p);
+  });
+  renderSuggestedStrip();
+  icons();
+}
+function attachDrag(card, product){
+  let startX=0, startY=0, dx=0, dragging=false;
+  const likeStamp = card.querySelector('.swipe-stamp.like');
+  const skipStamp = card.querySelector('.swipe-stamp.skip');
+  function onDown(x,y){ dragging=true; startX=x; startY=y; card.style.transition='none'; card.style.cursor='grabbing'; }
+  function onMove(x,y){
+    if(!dragging) return;
+    dx = x-startX;
+    const rot = dx/18;
+    card.style.transform = `translate(${dx}px, ${(y-startY)*.15}px) rotate(${rot}deg)`;
+    likeStamp.style.opacity = Math.min(Math.max(-dx/80,0),1);
+    skipStamp.style.opacity = Math.min(Math.max(dx/80,0),1);
+  }
+  function onUp(){
+    if(!dragging) return; dragging=false; card.style.cursor='grab'; card.style.transition='transform .25s ease, opacity .25s ease';
+    if(dx<-110){ finishSwipe(card, product, 'like'); }
+    else if(dx>110){ finishSwipe(card, product, 'skip'); }
+    else { card.style.transform='none'; likeStamp.style.opacity=0; skipStamp.style.opacity=0; }
+    dx=0;
+  }
+  card.addEventListener('mousedown', e=>onDown(e.clientX,e.clientY));
+  window.addEventListener('mousemove', e=>onMove(e.clientX,e.clientY));
+  window.addEventListener('mouseup', onUp);
+  card.addEventListener('touchstart', e=>{const t=e.touches[0]; onDown(t.clientX,t.clientY);}, {passive:true});
+  card.addEventListener('touchmove', e=>{const t=e.touches[0]; onMove(t.clientX,t.clientY);}, {passive:true});
+  card.addEventListener('touchend', onUp);
+}
+function finishSwipe(card, product, type){
+  const dir = type==='like'?1:-1;
+  card.style.transform = `translate(${dir*500}px, -40px) rotate(${dir*30}deg)`;
+  card.style.opacity='0';
+  recordSignal(product, type);
+  feedState.index++;
+  setTimeout(renderFeedStage, 200);
+}
+function feedAction(type){
+  const p = feedState.items[feedState.index];
+  if(!p) return;
+  if(type==='cart') addToCart(p,1);
+  const card = $(`#feed-stage .swipe-card[data-id="${p.id}"]`);
+  if(card) finishSwipe(card, p, type==='cart'?'like':type);
+  else { recordSignal(p, type==='cart'?'like':type); feedState.index++; renderFeedStage(); }
+}
+function renderSuggestedStrip(){
+  const strip = $('#suggested-strip');
+  if(!strip) return;
+  const prefs = loadPrefs();
+  const topCat = Object.entries(prefs.categories).sort((a,b)=>b[1]-a[1])[0]?.[0];
+  const avgPrice = prefs.priceCount ? prefs.priceSum/prefs.priceCount : null;
+  const list = [...state.products].sort((a,b)=>scoreProduct(b,prefs)-scoreProduct(a,prefs)).slice(0,10);
+  strip.innerHTML = list.map(p=>{
+    let why = 'Recomendado';
+    if(topCat && p.category===topCat) why = `Por ${topCat}`;
+    else if(avgPrice && Math.abs(p.price-avgPrice)/avgPrice<0.25) why = 'En tu rango de precio';
+    return `<a class="sugg-card" href="#/producto-${p.id}" onclick="event.preventDefault(); addToCart(state.products.find(x=>x.id==='${p.id}'))">
+      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}"></div>
+      <div class="why">${why}</div>
+      <div class="title">${p.title}</div>
+    </a>`;
+  }).join('');
+}
+
+/* ---------- 12. Producto card ---------- */
+function productCardHTML(p){
+  return `
+  <div class="card-prod">
+    <div class="match-badge">${p.match_score||70}%</div>
+    <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
+    <div class="body">
+      <div class="cat">${p.category}</div>
+      <div class="title">${p.title}</div>
+      <div class="price-row"><span class="price">${fmtMoney(p.price)}</span>${p.original_price>p.price?`<span class="price-orig">${fmtMoney(p.original_price)}</span>`:''}</div>
+      <button class="btn btn-primary btn-sm add-btn" onclick='addToCart(state.products.find(x=>x.id==="${p.id}"))'><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Agregar</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- 13. Vista: Productos ---------- */
+function viewProductos(){
+  const params = new URLSearchParams((state.route.split('?')[1]||''));
+  const catParam = params.get('cat');
+  if(catParam) state.productFilter = catParam;
+  const cats = ['Todas', ...new Set(state.products.map(p=>p.category))];
+  const filtered = state.productFilter==='Todas'? state.products : state.products.filter(p=>p.category===state.productFilter);
+  return `
+  <div class="section-head"><h2>Productos</h2><span class="mini">${filtered.length} resultados</span></div>
+  <div class="filter-row">${cats.map(c=>`<button class="pill ${state.productFilter===c?'active':''}" onclick="setProductFilter('${c}')">${c}</button>`).join('')}</div>
+  ${filtered.length? `<div class="grid-products">${filtered.map(productCardHTML).join('')}</div>` : `<div class="empty-state">No hay productos en esta categoría todavía.</div>`}
+  `;
+}
+function setProductFilter(c){ state.productFilter=c; location.hash = c==='Todas' ? '#/productos' : `#/productos?cat=${encodeURIComponent(c)}`; }
+
+/* ---------- 14. Vista: Carrito ---------- */
+function viewCarrito(){
+  if(!state.cart.length){
+    return `<div class="empty-state"><i data-lucide="shopping-cart" class="icon" style="width:36px;height:36px;margin-bottom:10px"></i><div>Tu carrito está vacío.</div><a class="btn btn-primary" style="margin-top:14px" href="#/productos">Ver catálogo</a></div>`;
+  }
+  return `
+  <div class="section-head"><h2>Tu carrito</h2></div>
+  <div class="cart-layout">
+    <div>
+      ${state.cart.map(i=>`
+        <div class="cart-item">
+          <img src="${i.image_url}" alt="${i.title}">
+          <div class="info">
+            <div class="cat">${i.category||''}</div>
+            <div class="name">${i.title}</div>
+            <div class="price">${fmtMoney(i.price)}</div>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="updateQty('${i.id}',-1)">−</button>
+              <span class="qty-val">${i.qty}</span>
+              <button class="qty-btn" onclick="updateQty('${i.id}',1)">+</button>
+            </div>
+            <button class="remove-link" onclick="removeFromCart('${i.id}')"><i data-lucide="trash-2" class="icon" style="width:13px;height:13px"></i>Quitar</button>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="summary-box">
+      <div class="summary-row"><span>Subtotal</span><span>${fmtMoney(cartTotal())}</span></div>
+      <div class="summary-row"><span>Envío</span><span>A definir</span></div>
+      <div class="summary-row total"><span>Total</span><span>${fmtMoney(cartTotal())}</span></div>
+      <a class="btn btn-primary btn-block" href="#/checkout" style="margin-top:14px">Ir a pagar</a>
+    </div>
+  </div>`;
+}
+
+/* ---------- 15. Vista: Checkout ---------- */
+let checkoutState = { delivery:'retiro', payment:'mp', name:'', phone:'', email:'', address:'' };
+function viewCheckout(){
+  if(!state.cart.length) return `<div class="empty-state">Tu carrito está vacío. <a href="#/productos">Ver catálogo</a></div>`;
+  const s = state.settings;
+  const payOptions = [];
+  if(s.pay_mp) payOptions.push({v:'mp', t:'Mercado Pago', d:'Tarjeta, débito o dinero en cuenta', icon:'credit-card'});
+  if(s.pay_agree) payOptions.push({v:'agree', t:'A convenir', d:'Coordinamos el pago por WhatsApp', icon:'message-circle'});
+  if(s.pay_store) payOptions.push({v:'store', t:'Pago en tienda', d:'Abonás al retirar', icon:'store'});
+  if(!payOptions.find(o=>o.v===checkoutState.payment) && payOptions[0]) checkoutState.payment = payOptions[0].v;
+  return `
+  <div class="section-head"><h2>Checkout</h2></div>
+  <div class="cart-layout">
+    <div>
+      <div class="admin-card">
+        <h3>Datos de contacto</h3>
+        <div class="field"><label>Nombre y apellido</label><input id="ck-name" value="${checkoutState.name}" placeholder="Nombre completo"></div>
+        <div class="field-row">
+          <div class="field"><label>WhatsApp</label><input id="ck-phone" value="${checkoutState.phone}" placeholder="11 2233 4455"></div>
+          <div class="field"><label>Email</label><input id="ck-email" value="${checkoutState.email}" placeholder="tu@email.com"></div>
+        </div>
+      </div>
+      <div class="admin-card">
+        <h3>Entrega</h3>
+        ${['retiro','envio','convenir'].map(v=>{
+          const labels = {retiro:['Retiro en tienda','Coordinamos horario por WhatsApp'], envio:['Envío a domicilio','Ingresá tu dirección'], convenir:['A convenir','Vemos la mejor opción juntos']};
+          return `<label class="option-card ${checkoutState.delivery===v?'selected':''}"><input type="radio" name="delivery" ${checkoutState.delivery===v?'checked':''} onchange="setDelivery('${v}')"><div><div class="ot">${labels[v][0]}</div><div class="os">${labels[v][1]}</div></div></label>`;
+        }).join('')}
+        ${checkoutState.delivery==='envio'? `<div class="field" style="margin-top:8px"><label>Dirección</label><input id="ck-address" value="${checkoutState.address}" placeholder="Calle, número, ciudad"></div>` : ''}
+      </div>
+      <div class="admin-card">
+        <h3>Pago</h3>
+        ${payOptions.map(o=>`<label class="option-card ${checkoutState.payment===o.v?'selected':''}"><input type="radio" name="payment" ${checkoutState.payment===o.v?'checked':''} onchange="setPayment('${o.v}')"><div><div class="ot">${o.t}</div><div class="os">${o.d}</div></div></label>`).join('')}
+      </div>
+    </div>
+    <div class="summary-box">
+      <h3 style="margin-top:0;font-size:14px">Resumen</h3>
+      ${state.cart.map(i=>`<div class="summary-row"><span>${i.qty}× ${i.title}</span><span>${fmtMoney(i.price*i.qty)}</span></div>`).join('')}
+      <div class="summary-row total"><span>Total</span><span>${fmtMoney(cartTotal())}</span></div>
+      <button class="btn ${checkoutState.payment==='mp'?'btn-mp':'btn-primary'} btn-block" style="margin-top:14px" onclick="submitOrder()">
+        ${checkoutState.payment==='mp' ? 'Pagar con Mercado Pago' : 'Confirmar pedido'}
+      </button>
+    </div>
+  </div>`;
+}
+function setDelivery(v){ checkoutState.delivery=v; render(); }
+function setPayment(v){ checkoutState.payment=v; render(); }
+function syncCheckoutInputs(){
+  ['ck-name','ck-phone','ck-email','ck-address'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', ()=>{
+      if(id==='ck-name') checkoutState.name=el.value;
+      if(id==='ck-phone') checkoutState.phone=el.value;
+      if(id==='ck-email') checkoutState.email=el.value;
+      if(id==='ck-address') checkoutState.address=el.value;
+    });
+  });
+}
+async function submitOrder(){
+  if(!checkoutState.name || !checkoutState.phone){ toast('Completá nombre y WhatsApp'); return; }
+  const order = {
+    ref: 'AK-' + Date.now().toString(36).toUpperCase(),
+    items: state.cart, total: cartTotal(),
+    customer:{name:checkoutState.name, phone:checkoutState.phone, email:checkoutState.email},
+    delivery: checkoutState.delivery, address: checkoutState.address,
+    payment: checkoutState.payment, status: 'pendiente', created_at: new Date().toISOString()
+  };
+  // Guardar orden (Supabase si hay backend, si no localStorage)
+  try{
+    if(HAS_SUPABASE){
+      await sb('orders', { method:'POST', body: JSON.stringify(order) });
+    } else {
+      const orders = lsGet('akari_demo_orders', []); orders.unshift(order); lsSet('akari_demo_orders', orders);
+    }
+  }catch(e){ console.warn('No se pudo guardar el pedido en Supabase, se guarda local.', e.message); const orders = lsGet('akari_demo_orders', []); orders.unshift(order); lsSet('akari_demo_orders', orders); }
+
+  if(checkoutState.payment==='mp'){
+    if(!state.settings.mp_worker_url){
+      toast('Mercado Pago no está configurado. Contactá a la tienda.');
+      finalizeOrder(order); return;
+    }
+    try{
+      const res = await fetch(state.settings.mp_worker_url, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ items: order.items.map(i=>({title:i.title, quantity:i.qty, unit_price:i.price})), order_ref: order.ref })
+      });
+      const data = await res.json();
+      if(data.init_point){ window.location.href = data.init_point; return; }
+      throw new Error('Sin init_point');
+    }catch(e){ console.warn('Worker MP no disponible:', e.message); toast('No se pudo iniciar Mercado Pago, revisá con la tienda.'); }
+  }
+  finalizeOrder(order);
+}
+function finalizeOrder(order){
+  state.lastOrder = order; lsSet('akari_last_order', order);
+  state.cart = []; saveCart();
+  location.hash = '#/exito';
+}
+
+/* ---------- 16. Vista: Éxito ---------- */
+function viewExito(){
+  const o = state.lastOrder;
+  const s = state.settings;
+  if(!o) return `<div class="empty-state">No encontramos un pedido reciente. <a href="#/productos">Ir al catálogo</a></div>`;
+  const waText = encodeURIComponent(`Hola! Quiero confirmar mi pedido ${o.ref} de ${s.brand_name}.`);
+  return `
+  <div class="success-wrap">
+    <div class="success-ico"><i data-lucide="check" class="icon" style="width:32px;height:32px"></i></div>
+    <h2>¡Pedido recibido!</h2>
+    <p class="mini">Guardá tu número de referencia. Te vamos a contactar para coordinar ${o.delivery==='envio'?'el envío':o.delivery==='retiro'?'el retiro':'los próximos pasos'}.</p>
+    <div class="ref-box">${o.ref}</div>
+    <a class="btn btn-primary btn-block" href="https://wa.me/${s.whatsapp}?text=${waText}" target="_blank"><i data-lucide="message-circle" class="icon"></i>Confirmar por WhatsApp</a>
+    <a class="btn btn-outline btn-block" style="margin-top:10px" href="#/productos">Seguir comprando</a>
+  </div>`;
+}
+
+/* ---------- 17. Vista: En vivo ---------- */
+function viewVivo(){
+  const s = state.settings;
+  if(!s.live_active) return `<div class="empty-state">No hay transmisiones programadas por ahora. <a href="#/contacto">Consultanos</a></div>`;
+  return `
+  <div class="live-card">
+    <span class="live-badge"><i data-lucide="radio" class="icon" style="width:13px;height:13px"></i> Próximo Live</span>
+    <h2>${s.live_title}</h2>
+    <p class="mini">${s.live_when}</p>
+    <a class="btn btn-primary" style="margin-top:10px" href="${s.live_url}" target="_blank"><i data-lucide="facebook" class="icon"></i>Ver en Facebook</a>
+  </div>`;
+}
+
+/* ---------- 18. Vista: Contacto ---------- */
+function viewContacto(){
+  const s = state.settings;
+  return `
+  <div class="section-head"><h2>Contacto</h2></div>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-card"><div class="ico"><i data-lucide="message-circle" class="icon"></i></div><div><div style="font-weight:700;font-size:13.5px">WhatsApp</div><a href="https://wa.me/${s.whatsapp}" target="_blank" class="mini">+${s.whatsapp}</a></div></div>
+      <div class="contact-card"><div class="ico"><i data-lucide="mail" class="icon"></i></div><div><div style="font-weight:700;font-size:13.5px">Email</div><a href="mailto:${s.email}" class="mini">${s.email}</a></div></div>
+    </div>
+    <div class="admin-card">
+      <h3>Escribinos</h3>
+      <div class="field"><label>Nombre</label><input id="ct-name" placeholder="Tu nombre"></div>
+      <div class="field"><label>Mensaje</label><textarea id="ct-msg" rows="4" placeholder="¿En qué te ayudamos?"></textarea></div>
+      <button class="btn btn-primary btn-block" onclick="sendContact()">Enviar por WhatsApp</button>
+    </div>
+  </div>`;
+}
+function sendContact(){
+  const name = $('#ct-name')?.value||''; const msg = $('#ct-msg')?.value||'';
+  const text = encodeURIComponent(`Hola, soy ${name}. ${msg}`);
+  window.open(`https://wa.me/${state.settings.whatsapp}?text=${text}`,'_blank');
+}
+
+/* ---------- 19. Admin ---------- */
+let adminTab = 'productos';
+let adminModal = null; // {mode:'new'|'edit', product}
+
+function viewAdmin(){
+  if(!state.session) return adminLoginHTML();
+  return `
+  <div class="section-head"><h2>Panel de administración</h2><button class="btn btn-outline btn-sm" onclick="adminLogout()"><i data-lucide="log-out" class="icon" style="width:14px;height:14px"></i>Salir</button></div>
+  <div class="admin-tabs">
+    ${['productos','carga masiva','diseño','pagos','pedidos','tienda'].map(t=>`<button class="admin-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')}
+  </div>
+  <div id="admin-tab-content">${adminTabContent()}</div>
+  ${adminModal ? adminModalHTML() : ''}
+  `;
+}
+function adminLoginHTML(){
+  return `
+  <div class="admin-login-wrap">
+    <h2 style="margin-top:0">Ingresar</h2>
+    <p class="mini">Acceso solo para administradores.</p>
+    <div class="field"><label>Email</label><input id="al-email" placeholder="admin@akari.com"></div>
+    <div class="field"><label>Contraseña</label><input id="al-pass" type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary btn-block" onclick="adminLogin()">Ingresar</button>
+    ${!HAS_SUPABASE ? `<p class="mini" style="margin-top:12px">Modo demo (sin Supabase conectado): usá <strong>admin@akari.com</strong> / <strong>admin123</strong>.</p>` : ''}
+    <a href="#/" class="mini" style="display:block;margin-top:10px">← Volver a la tienda</a>
+  </div>`;
+}
+async function adminLogin(){
+  const email = $('#al-email')?.value||''; const pass = $('#al-pass')?.value||'';
+  if(HAS_SUPABASE){
+    try{
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},
+        body: JSON.stringify({email, password:pass})
+      });
+      const data = await res.json();
+      if(data.access_token){ state.session = data; lsSet('akari_admin_session', data); toast('Bienvenido/a'); render(); }
+      else toast('Credenciales inválidas');
+    }catch(e){ toast('Error de conexión con Supabase'); }
+  } else {
+    if(email==='admin@akari.com' && pass==='admin123'){
+      state.session = {demo:true, email}; lsSet('akari_admin_session', state.session); toast('Bienvenido/a (modo demo)'); render();
+    } else toast('Credenciales inválidas (demo: admin@akari.com / admin123)');
+  }
+}
+function adminLogout(){ state.session=null; lsSet('akari_admin_session', null); render(); }
+function setAdminTab(t){ adminTab=t; render(); }
+
+function adminTabContent(){
+  if(adminTab==='productos') return adminProductos();
+  if(adminTab==='carga masiva') return adminBulk();
+  if(adminTab==='diseño') return adminDesign();
+  if(adminTab==='pagos') return adminPayments();
+  if(adminTab==='pedidos') return adminOrders();
+  if(adminTab==='tienda') return adminStore();
+  return '';
+}
+
+/* -- Productos CRUD -- */
+function adminProductos(){
+  const list = HAS_SUPABASE ? state.products : allDemoProducts();
+  return `
+  <div class="admin-toolbar">
+    <span class="mini">${list.length} productos</span>
+    <button class="btn btn-primary btn-sm" onclick="openProductModal('new')"><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Nuevo producto</button>
+  </div>
+  <table class="admin-table">
+    <thead><tr><th></th><th>Título</th><th>Categoría</th><th>Precio</th><th>Match</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+      ${list.map(p=>`<tr>
+        <td><img src="${p.image_url}" style="width:36px;height:36px;object-fit:cover;border-radius:8px"></td>
+        <td>${p.title}</td><td>${p.category}</td><td>${fmtMoney(p.price)}</td><td>${p.match_score||''}%</td>
+        <td>${p.active? '<span class="badge-ok">Activo</span>':'<span class="badge-off">Inactivo</span>'}</td>
+        <td style="white-space:nowrap"><button class="icon-btn" onclick='openProductModal("edit", ${JSON.stringify(p).replace(/'/g,"&#39;")})'><i data-lucide="pencil" class="icon" style="width:15px;height:15px"></i></button>
+        <button class="icon-btn" onclick="deleteProduct('${p.id}')"><i data-lucide="trash-2" class="icon" style="width:15px;height:15px;color:#c0362c"></i></button></td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+function openProductModal(mode, product){
+  adminModal = {mode, product: product || {id:uid(), title:'', brand:'', category:'Tecnología', price:0, original_price:0, match_score:80, image_url:'', sort_order: (allDemoProducts().length+1), active:true}};
+  render();
+}
+function closeModal(){ adminModal=null; render(); }
+function adminModalHTML(){
+  const p = adminModal.product;
+  return `
+  <div class="modal-backdrop" onclick="if(event.target===this) closeModal()">
+    <div class="modal">
+      <h3>${adminModal.mode==='new'?'Nuevo producto':'Editar producto'}</h3>
+      <div class="field"><label>Título</label><input id="pm-title" value="${p.title}"></div>
+      <div class="field-row">
+        <div class="field"><label>Marca</label><input id="pm-brand" value="${p.brand}"></div>
+        <div class="field"><label>Categoría</label><input id="pm-category" value="${p.category}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Precio</label><input id="pm-price" type="number" value="${p.price}"></div>
+        <div class="field"><label>Precio anterior</label><input id="pm-original" type="number" value="${p.original_price||0}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Match %</label><input id="pm-match" type="number" value="${p.match_score||80}"></div>
+        <div class="field"><label>Orden</label><input id="pm-sort" type="number" value="${p.sort_order||1}"></div>
+      </div>
+      <div class="field"><label>URL de imagen</label><input id="pm-image" value="${p.image_url}"></div>
+      <div class="toggle-row"><span class="mini" style="font-weight:700;color:var(--text)">Activo</span><button class="switch ${p.active?'on':''}" id="pm-active" onclick="this.classList.toggle('on')"></button></div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-outline btn-block" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-primary btn-block" onclick="saveProduct()">Guardar</button>
+      </div>
+    </div>
+  </div>`;
+}
+async function saveProduct(){
+  const p = adminModal.product;
+  const updated = {
+    ...p,
+    title: $('#pm-title').value, brand: $('#pm-brand').value, category: $('#pm-category').value,
+    price: Number($('#pm-price').value||0), original_price: Number($('#pm-original').value||0),
+    match_score: Number($('#pm-match').value||80), sort_order: Number($('#pm-sort').value||1),
+    image_url: $('#pm-image').value, active: $('#pm-active').classList.contains('on')
+  };
+  if(HAS_SUPABASE){
+    try{
+      if(adminModal.mode==='new') await sb('products', {method:'POST', body:JSON.stringify(updated)});
+      else await sb(`products?id=eq.${p.id}`, {method:'PATCH', body:JSON.stringify(updated)});
+      await loadData();
+    }catch(e){ toast('Error guardando en Supabase: '+e.message); }
+  } else {
+    let list = allDemoProducts();
+    if(adminModal.mode==='new') list.push(updated);
+    else list = list.map(x=>x.id===p.id?updated:x);
+    saveDemoProducts(list);
+    state.products = list.filter(x=>x.active);
+  }
+  toast('Producto guardado'); closeModal();
+}
+async function deleteProduct(id){
+  if(!confirm('¿Eliminar este producto?')) return;
+  if(HAS_SUPABASE){
+    try{ await sb(`products?id=eq.${id}`, {method:'DELETE'}); await loadData(); }catch(e){ toast('Error: '+e.message); }
+  } else {
+    saveDemoProducts(allDemoProducts().filter(x=>x.id!==id));
+    state.products = allDemoProducts().filter(x=>x.active);
+  }
+  toast('Producto eliminado'); render();
+}
+
+/* -- Carga masiva CSV -- */
+function adminBulk(){
+  return `
+  <div class="admin-card">
+    <h3>Carga masiva de productos</h3>
+    <p class="mini">Descargá la plantilla, completá filas y subí el CSV. Columnas: title, brand, category, price, original_price, match_score, image_url, sort_order, active.</p>
+    <a class="btn btn-outline btn-sm" href="./supabase/plantilla-productos.csv" download><i data-lucide="download" class="icon" style="width:14px;height:14px"></i>Descargar plantilla CSV</a>
+    <div class="field" style="margin-top:16px"><label>Subir CSV</label><input type="file" id="bulk-file" accept=".csv"></div>
+    <button class="btn btn-primary" onclick="importCSV()"><i data-lucide="upload" class="icon" style="width:14px;height:14px"></i>Importar</button>
+    <div id="bulk-result" class="mini" style="margin-top:10px"></div>
+  </div>`;
+}
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/);
+  const headers = lines[0].split(',').map(h=>h.trim());
+  return lines.slice(1).filter(Boolean).map(line=>{
+    const vals = line.split(',');
+    const obj = {};
+    headers.forEach((h,i)=> obj[h] = (vals[i]||'').trim());
+    return {
+      id: uid(), title:obj.title, brand:obj.brand, category:obj.category,
+      price:Number(obj.price||0), original_price:Number(obj.original_price||0),
+      match_score:Number(obj.match_score||80), image_url:obj.image_url,
+      sort_order:Number(obj.sort_order||1), active: obj.active!=='false' && obj.active!=='0'
+    };
+  });
+}
+async function importCSV(){
+  const file = $('#bulk-file')?.files?.[0];
+  if(!file){ toast('Elegí un archivo CSV'); return; }
+  const text = await file.text();
+  const rows = parseCSV(text);
+  if(HAS_SUPABASE){
+    try{ await sb('products', {method:'POST', body:JSON.stringify(rows)}); await loadData(); }
+    catch(e){ $('#bulk-result').textContent = 'Error: '+e.message; return; }
+  } else {
+    saveDemoProducts([...allDemoProducts(), ...rows]);
+    state.products = allDemoProducts().filter(x=>x.active);
+  }
+  $('#bulk-result').textContent = `${rows.length} productos importados correctamente.`;
+  toast('Carga masiva completa');
+}
+
+/* -- Diseño -- */
+function adminDesign(){
+  const s = state.settings;
+  return `
+  <div class="admin-card">
+    <h3>Identidad</h3>
+    <div class="field-row">
+      <div class="field"><label>Color de marca</label><input id="ds-color" type="color" value="${s.color_brand}"></div>
+      <div class="field"><label>Fondo</label><input id="ds-bg" type="color" value="${s.color_bg}"></div>
+    </div>
+    <div class="field"><label>Color de texto</label><input id="ds-text" type="color" value="${s.color_text}"></div>
+    <div class="field"><label>URL del logo</label><input id="ds-logo" value="${s.logo_url}"></div>
+  </div>
+  <div class="admin-card">
+    <h3>Hero (Inicio)</h3>
+    <div class="field"><label>Título</label><input id="ds-hero-title" value="${s.hero_title}"></div>
+    <div class="field"><label>Texto</label><textarea id="ds-hero-text" rows="3">${s.hero_text}</textarea></div>
+  </div>
+  <button class="btn btn-primary" onclick="saveDesign()">Guardar cambios</button>
+  `;
+}
+async function saveDesign(){
+  const patch = {
+    color_brand: $('#ds-color').value, color_bg: $('#ds-bg').value, color_text: $('#ds-text').value,
+    logo_url: $('#ds-logo').value, hero_title: $('#ds-hero-title').value, hero_text: $('#ds-hero-text').value
+  };
+  await patchSettings(patch);
+  toast('Diseño actualizado');
+}
+
+/* -- Pagos -- */
+function adminPayments(){
+  const s = state.settings;
+  return `
+  <div class="admin-card">
+    <h3>Métodos de pago</h3>
+    <div class="toggle-row"><div><div style="font-weight:700;font-size:13.5px">Mercado Pago</div><div class="mini">Pago con tarjeta o dinero en cuenta</div></div><button class="switch ${s.pay_mp?'on':''}" onclick="toggleSetting('pay_mp', this)"></button></div>
+    <div class="toggle-row"><div><div style="font-weight:700;font-size:13.5px">A convenir</div><div class="mini">Coordinación manual por WhatsApp</div></div><button class="switch ${s.pay_agree?'on':''}" onclick="toggleSetting('pay_agree', this)"></button></div>
+    <div class="toggle-row"><div><div style="font-weight:700;font-size:13.5px">Pago en tienda</div><div class="mini">Se abona al retirar</div></div><button class="switch ${s.pay_store?'on':''}" onclick="toggleSetting('pay_store', this)"></button></div>
+  </div>
+  <div class="admin-card">
+    <h3>Configuración de Mercado Pago</h3>
+    <div class="field"><label>Modo</label><select id="mp-mode"><option value="test" ${s.mp_mode==='test'?'selected':''}>Test</option><option value="prod" ${s.mp_mode==='prod'?'selected':''}>Producción</option></select></div>
+    <div class="field"><label>Public Key</label><input id="mp-pubkey" value="${s.mp_public_key}" placeholder="APP_USR-..."></div>
+    <div class="field"><label>URL del Worker (Cloudflare)</label><input id="mp-worker" value="${s.mp_worker_url}" placeholder="https://tu-worker.workers.dev"></div>
+    <p class="mini">El Access Token de Mercado Pago nunca se guarda acá: vive solo como variable de entorno en el Worker.</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary btn-sm" onclick="saveMpSettings()">Guardar</button>
+      <button class="btn btn-outline btn-sm" onclick="testWorker()"><i data-lucide="zap" class="icon" style="width:14px;height:14px"></i>Probar Worker</button>
+    </div>
+    <div id="mp-test-result" class="mini" style="margin-top:8px"></div>
+  </div>`;
+}
+async function toggleSetting(key, btn){
+  btn.classList.toggle('on');
+  await patchSettings({[key]: btn.classList.contains('on')});
+}
+async function saveMpSettings(){
+  await patchSettings({ mp_mode: $('#mp-mode').value, mp_public_key: $('#mp-pubkey').value, mp_worker_url: $('#mp-worker').value });
+  toast('Configuración de pagos guardada');
+}
+async function testWorker(){
+  const url = state.settings.mp_worker_url;
+  const el = $('#mp-test-result');
+  if(!url){ el.textContent='Ingresá la URL del Worker primero.'; return; }
+  el.textContent = 'Probando...';
+  try{
+    const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items:[{title:'Test', quantity:1, unit_price:100}], order_ref:'TEST'})});
+    el.textContent = res.ok ? 'Worker respondió correctamente ✔' : `Worker respondió con error ${res.status}`;
+  }catch(e){ el.textContent = 'No se pudo contactar al Worker: '+e.message; }
+}
+
+/* -- Pedidos -- */
+function adminOrders(){
+  const orders = lsGet('akari_demo_orders', []);
+  if(!orders.length) return `<div class="empty-state">Todavía no hay pedidos.</div>`;
+  return `
+  <table class="admin-table">
+    <thead><tr><th>Ref</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Pago</th><th>Fecha</th></tr></thead>
+    <tbody>${orders.map(o=>`<tr><td>${o.ref}</td><td>${o.customer.name}<br><span class="mini">${o.customer.phone}</span></td><td>${fmtMoney(o.total)}</td><td>${o.delivery}</td><td>${o.payment}</td><td>${new Date(o.created_at).toLocaleString('es-AR')}</td></tr>`).join('')}</tbody>
+  </table>`;
+}
+
+/* -- Tienda -- */
+function adminStore(){
+  const s = state.settings;
+  return `
+  <div class="admin-card">
+    <h3>Datos de la tienda</h3>
+    <div class="field"><label>Nombre</label><input id="st-name" value="${s.brand_name}"></div>
+    <div class="field"><label>Eslogan</label><input id="st-tag" value="${s.brand_tagline}"></div>
+    <div class="field-row">
+      <div class="field"><label>WhatsApp (solo números)</label><input id="st-wa" value="${s.whatsapp}"></div>
+      <div class="field"><label>Email</label><input id="st-email" value="${s.email}"></div>
+    </div>
+    <div class="field"><label>Moneda</label><input id="st-currency" value="${s.currency}"></div>
+  </div>
+  <div class="admin-card">
+    <h3>Sección En vivo</h3>
+    <div class="toggle-row"><span class="mini" style="font-weight:700;color:var(--text)">Activa</span><button class="switch ${s.live_active?'on':''}" id="lv-active" onclick="this.classList.toggle('on')"></button></div>
+    <div class="field"><label>Título</label><input id="lv-title" value="${s.live_title}"></div>
+    <div class="field-row">
+      <div class="field"><label>Cuándo</label><input id="lv-when" value="${s.live_when}"></div>
+      <div class="field"><label>URL</label><input id="lv-url" value="${s.live_url}"></div>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="saveStore()">Guardar cambios</button>`;
+}
+async function saveStore(){
+  await patchSettings({
+    brand_name: $('#st-name').value, brand_tagline: $('#st-tag').value,
+    whatsapp: $('#st-wa').value, email: $('#st-email').value, currency: $('#st-currency').value,
+    live_active: $('#lv-active').classList.contains('on'), live_title: $('#lv-title').value,
+    live_when: $('#lv-when').value, live_url: $('#lv-url').value
+  });
+  toast('Tienda actualizada');
+}
+async function patchSettings(patch){
+  state.settings = {...state.settings, ...patch};
+  if(HAS_SUPABASE){
+    try{ await sb('site_settings?id=eq.1', {method:'PATCH', body:JSON.stringify(patch)}); }catch(e){ toast('Error guardando en Supabase: '+e.message); }
+  } else {
+    saveDemoSettings({...lsGet('akari_demo_settings',{}), ...patch});
+  }
+  applyTheme(); render();
+}
+
+/* ---------- 20. Render principal ---------- */
+function currentView(){
+  const route = state.route.split('?')[0];
+  if(route==='#/' || route==='') return viewHome();
+  if(route==='#/productos') return viewProductos();
+  if(route==='#/carrito') return viewCarrito();
+  if(route==='#/checkout') return viewCheckout();
+  if(route==='#/exito') return viewExito();
+  if(route==='#/vivo') return viewVivo();
+  if(route==='#/contacto') return viewContacto();
+  if(route==='#/admin') return viewAdmin();
+  return `<div class="empty-state">Página no encontrada. <a href="#/">Volver al inicio</a></div>`;
+}
+function render(){
+  const route = state.route.split('?')[0];
+  document.getElementById('app').innerHTML = shellHTML(currentView());
+  icons();
+  if(route==='#/' || route==='') { renderFeedStage(); }
+  if(route==='#/checkout') syncCheckoutInputs();
+}
+
+/* ---------- 21. Init ---------- */
+(async function init(){
+  await loadData();
+  render();
+})();
+</script>
+</body>
+</html>
