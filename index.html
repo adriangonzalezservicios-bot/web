@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6b8f35">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AKARI">
+<link rel="apple-touch-icon" href="./logo-mascot.png">
+<link rel="manifest" href="./manifest.json">
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="preconnect" href="https://khlsqzwtauctaqtqmuxd.supabase.co">
 <title>AKARI Electro & Home — Tecnología, hogar y accesorios</title>
 <meta name="description" content="Descubrí tecnología, hogar y accesorios deslizando: AKARI aprende lo que te gusta. Comprá con Mercado Pago, envío a domicilio o retiro en tienda.">
 <link rel="canonical" href="https://www.akarielectrohome.com/">
@@ -10,12 +19,12 @@
 <meta property="og:site_name" content="AKARI Electro & Home">
 <meta property="og:title" content="AKARI Electro & Home — Tecnología, hogar y accesorios">
 <meta property="og:description" content="Tienda discovery: deslizá, descubrí y comprá productos de tecnología, hogar y accesorios pensados para vos.">
-<meta property="og:image" content="./logo-mascot.png">
+<meta property="og:image" content="./akari-logo-full.png">
 <meta property="og:url" content="https://www.akarielectrohome.com/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AKARI Electro & Home">
 <meta name="twitter:description" content="Descubrí tecnología, hogar y accesorios deslizando. AKARI aprende tus gustos.">
-<meta name="twitter:image" content="./logo-mascot.png">
+<meta name="twitter:image" content="./akari-logo-full.png">
 <link rel="icon" href="./logo-mascot.png">
 <script type="application/ld+json">
 {
@@ -48,17 +57,21 @@
   --shadow:0 1px 2px rgba(15,18,24,.04), 0 8px 24px -12px rgba(15,18,24,.10);
   --sidebar-w:248px;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);
   color:var(--text);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
+  min-height:100dvh;
+  overscroll-behavior-y:none;
 }
 a{color:inherit;text-decoration:none}
-button{font-family:inherit;cursor:pointer}
+button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+a,.pill,.nav-item,.admin-tab{touch-action:manipulation}
 img{max-width:100%;display:block}
 .icon{width:18px;height:18px;stroke-width:2}
 
@@ -82,12 +95,12 @@ img{max-width:100%;display:block}
 .admin-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer}
 .admin-dot:hover{background:var(--muted)}
 
-.topbar{display:none;position:sticky;top:0;z-index:30;background:var(--white);border-bottom:1px solid var(--border);align-items:center;gap:10px;padding:12px 14px}
+.topbar{display:none;position:sticky;top:0;z-index:30;background:var(--white);border-bottom:1px solid var(--border);align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 12px}
 .topbar .brand-row{padding:0}
-.icon-btn{background:none;border:none;padding:8px;border-radius:var(--r-sm);display:flex}
+.icon-btn{background:none;border:none;padding:8px;border-radius:var(--r-sm);display:flex;min-width:40px;min-height:40px;align-items:center;justify-content:center}
 .icon-btn:hover{background:var(--soft)}
 .drawer-backdrop{display:none;position:fixed;inset:0;background:rgba(15,18,24,.4);z-index:40}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:78%;max-width:300px;background:#fff;z-index:41;padding:18px 14px;transform:translateX(-100%);transition:transform .2s ease}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:78%;max-width:300px;background:#fff;z-index:41;padding:calc(18px + env(safe-area-inset-top)) 14px 18px;transform:translateX(-100%);transition:transform .2s ease}
 .drawer.open{transform:translateX(0)}
 .drawer-backdrop.open{display:block}
 
@@ -96,7 +109,7 @@ main{flex:1;min-width:0}
 @media (max-width:860px){
   .sidebar{display:none}
   .topbar{display:flex}
-  .container{padding:18px 16px 90px}
+  .container{padding:18px 16px calc(110px + env(safe-area-inset-bottom))}
 }
 
 /* ---------- Buttons ---------- */
@@ -159,7 +172,8 @@ section.block{margin-bottom:40px}
 
 /* ---------- Feed swipe ---------- */
 .feed-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
-.feed-stage{position:relative;width:100%;max-width:340px;height:440px}
+.feed-stage{position:relative;width:100%;max-width:340px;height:min(440px, 62vh, 62dvh)}
+@media (max-width:380px){.feed-stage{height:min(400px, 58vh, 58dvh)}}
 .swipe-card{position:absolute;inset:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;user-select:none;touch-action:pan-y;cursor:grab}
 .swipe-card .imgwrap{flex:1;background:var(--soft);overflow:hidden}
 .swipe-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
@@ -206,9 +220,9 @@ footer{border-top:1px solid var(--border);background:#fff;margin-top:20px}
 .cart-item .name{font-weight:700;font-size:13.5px}
 .cart-item .cat{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:700}
 .qty-row{display:flex;align-items:center;gap:8px;margin-top:8px}
-.qty-btn{width:26px;height:26px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center}
+.qty-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
 .qty-val{font-weight:700;font-size:13px;min-width:18px;text-align:center}
-.remove-link{font-size:12px;color:#c0362c;font-weight:700;display:flex;align-items:center;gap:4px;margin-top:6px}
+.remove-link{font-size:12px;color:#c0362c;font-weight:700;display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:6px 4px 6px 0;border:none;background:none;font-family:inherit;touch-action:manipulation}
 .summary-box{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px}
 .summary-row{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:var(--muted)}
 .summary-row.total{color:var(--text);font-weight:800;font-size:16px;border-top:1px solid var(--border);padding-top:10px;margin-top:10px}
@@ -218,7 +232,7 @@ footer{border-top:1px solid var(--border);background:#fff;margin-top:20px}
 /* ---------- Forms ---------- */
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13.5px;font-family:inherit;background:#fff;color:var(--text)}
+.field input,.field select,.field textarea{width:100%;padding:12px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:16px;font-family:inherit;background:#fff;color:var(--text)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .option-card{border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px;background:#fff}
@@ -248,10 +262,11 @@ footer{border-top:1px solid var(--border);background:#fff;margin-top:20px}
 .admin-tab{padding:10px 14px;font-size:13px;font-weight:700;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .admin-tab.active{color:var(--brand-dark);border-color:var(--brand)}
 .admin-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
-table.admin-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+table.admin-table{width:100%;min-width:560px;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
 table.admin-table th,table.admin-table td{padding:10px 12px;font-size:12.5px;text-align:left;border-bottom:1px solid var(--border)}
 table.admin-table th{background:var(--soft);font-weight:800;color:var(--brand-dark)}
 table.admin-table tr:last-child td{border-bottom:none}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r-md)}
 .badge-ok{background:var(--soft);color:var(--brand-dark);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
 .badge-off{background:#f1f5f9;color:var(--muted);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
 .modal-backdrop{position:fixed;inset:0;background:rgba(15,18,24,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
@@ -277,6 +292,16 @@ table.admin-table tr:last-child td{border-bottom:none}
 .whatsapp-fab:hover{transform:scale(1.06)}
 .whatsapp-fab svg{width:28px;height:28px}
 @media (max-width:860px){.whatsapp-fab{bottom:82px;width:50px;height:50px}.whatsapp-fab svg{width:26px;height:26px}}
+
+/* ---------- Barra de pago fija (mobile) ---------- */
+@media (max-width:860px){
+  .cta-fixed{
+    position:fixed;left:0;right:0;bottom:0;z-index:35;
+    border-radius:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+    box-shadow:0 -6px 18px rgba(15,18,24,.10);
+    font-size:15px;
+  }
+}
 </style>
 </head>
 <body>
@@ -399,66 +424,159 @@ function applyTheme(){
   document.documentElement.style.setProperty('--text', state.settings.color_text || '#0f1218');
 }
 
-/* ---------- 6. Motor de gustos v2 (localStorage: akari_prefs_v2) ---------- */
-const PREFS_KEY = 'akari_prefs_v2';
+/* ---------- 6. Motor de gustos v3 (localStorage: akari_prefs_v3) ---------- */
+const PREFS_KEY = 'akari_prefs_v3';
+const HALF_LIFE_DAYS = 21;                 // cuánto tarda una preferencia en "olvidarse" a la mitad
+const DECAY_LAMBDA = Math.log(2) / HALF_LIFE_DAYS;
+const SIGNAL_WEIGHT = { like: 2, cart: 3.2, skip: -1.6, view: 0 };
+const now_ = () => Date.now();
+const daysSince = (ts) => ts ? (now_() - ts) / 86400000 : 999;
+function decayFactor(ts){ return Math.exp(-DECAY_LAMBDA * Math.max(0, daysSince(ts))); }
+function decayedValue(entry){ if(!entry) return 0; return entry.score * decayFactor(entry.ts); }
+
 function loadPrefs(){
-  return lsGet(PREFS_KEY, { categories:{}, brands:{}, priceSum:0, priceCount:0, seen:{}, skipped:{}, session:[] });
+  const p = lsGet(PREFS_KEY, null);
+  if(p && p.version===3) return p;
+  // Migración simple desde v2 si existía, para no perder progreso del usuario
+  const old = lsGet('akari_prefs_v2', null);
+  const fresh = {
+    version:3, categories:{}, brands:{}, priceMean:0, priceM2:0, priceCount:0,
+    seen:{}, skipped:{}, session:[], totalSignals:0, createdAt: now_()
+  };
+  if(old){
+    const ts = now_();
+    Object.entries(old.categories||{}).forEach(([k,v])=> fresh.categories[k]={score:v, ts});
+    Object.entries(old.brands||{}).forEach(([k,v])=> fresh.brands[k]={score:v, ts});
+    if(old.priceCount){ fresh.priceCount=old.priceCount; fresh.priceMean=old.priceSum/old.priceCount; }
+    Object.entries(old.seen||{}).forEach(([k,v])=> fresh.seen[k]={count:v, ts});
+    Object.entries(old.skipped||{}).forEach(([k,v])=> fresh.skipped[k]={count:v, ts});
+    fresh.session = old.session||[];
+  }
+  savePrefs(fresh);
+  return fresh;
 }
 function savePrefs(p){ lsSet(PREFS_KEY, p); }
+
+// Welford incremental: media y varianza de precios que le gustaron, sin guardar historial completo
+function updatePriceStats(prefs, price){
+  prefs.priceCount += 1;
+  const delta = price - prefs.priceMean;
+  prefs.priceMean += delta / prefs.priceCount;
+  const delta2 = price - prefs.priceMean;
+  prefs.priceM2 += delta * delta2;
+}
+function priceStd(prefs){
+  if(prefs.priceCount < 2) return null;
+  return Math.sqrt(prefs.priceM2 / prefs.priceCount);
+}
+
 function recordSignal(product, type){
-  // type: 'like' (+2), 'cart' (+3), 'skip' (-1.5), 'view' (0, solo novelty/fatiga)
   const prefs = loadPrefs();
-  const weight = type==='like'?2:type==='cart'?3:type==='skip'?-1.5:0;
+  const weight = SIGNAL_WEIGHT[type] ?? 0;
+  const ts = now_();
   if(weight !== 0){
-    prefs.categories[product.category] = (prefs.categories[product.category]||0)*0.9 + weight;
-    prefs.brands[product.brand] = (prefs.brands[product.brand]||0)*0.9 + weight;
-    if(weight > 0){ prefs.priceSum += product.price; prefs.priceCount += 1; }
+    const catEntry = prefs.categories[product.category];
+    prefs.categories[product.category] = { score: decayedValue(catEntry) + weight, ts };
+    const brandEntry = prefs.brands[product.brand];
+    prefs.brands[product.brand] = { score: decayedValue(brandEntry) + weight, ts };
+    if(weight > 0) updatePriceStats(prefs, product.price);
+    prefs.totalSignals += 1;
   }
-  if(type==='skip') prefs.skipped[product.id] = (prefs.skipped[product.id]||0)+1;
-  prefs.seen[product.id] = (prefs.seen[product.id]||0)+1;
+  if(type==='skip'){
+    const s = prefs.skipped[product.id];
+    prefs.skipped[product.id] = { count: (s?s.count:0)+1, ts };
+  }
+  const seenEntry = prefs.seen[product.id];
+  prefs.seen[product.id] = { count: (seenEntry?seenEntry.count:0)+1, ts };
   prefs.session.push(product.id);
   if(prefs.session.length>40) prefs.session.shift();
   savePrefs(prefs);
 }
-function scoreProduct(product, prefs){
-  let score = (product.match_score||70)/100; // base
-  score += (prefs.categories[product.category]||0) * 0.12;
-  score += (prefs.brands[product.brand]||0) * 0.08;
-  const avgPrice = prefs.priceCount ? prefs.priceSum/prefs.priceCount : null;
-  if(avgPrice){ const diff = Math.abs(product.price-avgPrice)/avgPrice; score -= Math.min(diff,1)*0.15; }
-  if(!prefs.seen[product.id]) score += 0.18; // novelty
-  const fatigue = prefs.seen[product.id]||0;
-  score -= Math.min(fatigue*0.1, 0.4);
-  score -= Math.min((prefs.skipped[product.id]||0)*0.3, 0.9);
-  score += Math.random()*0.06; // ruido leve
+
+// Preferencia gaussiana de precio: 1.0 si está justo en el precio típico que le gusta, decae con la distancia
+function priceFit(price, prefs){
+  if(prefs.priceCount < 2) return 0.5; // sin datos suficientes: neutral
+  const std = Math.max(priceStd(prefs), prefs.priceMean*0.12, 1000); // piso mínimo para no ser demasiado estricto
+  const z = (price - prefs.priceMean) / std;
+  return Math.exp(-0.5 * z * z); // 1 = precio ideal, ->0 = muy lejos de lo habitual
+}
+
+function scoreProduct(product, prefs, opts={}){
+  const sessionSet = opts.sessionSet || new Set();
+  let score = (product.match_score||70)/100;                 // base editorial 0–1
+
+  const catAff = Math.tanh(decayedValue(prefs.categories[product.category]) / 4); // -1..1 acotado
+  const brandAff = Math.tanh(decayedValue(prefs.brands[product.brand]) / 4);
+  score += catAff * 0.22 + brandAff * 0.14;
+
+  score += (priceFit(product.price, prefs) - 0.5) * 0.30;     // -0.15..+0.15
+
+  const seenEntry = prefs.seen[product.id];
+  if(!seenEntry){
+    score += 0.16; // novelty: nunca visto
+  } else {
+    const recentness = decayFactor(seenEntry.ts);              // 1 = recién visto, ->0 con el tiempo
+    score -= Math.min(0.32, 0.08 * Math.log(1 + seenEntry.count)) * recentness;
+  }
+
+  const skipEntry = prefs.skipped[product.id];
+  if(skipEntry){
+    const recentness = decayFactor(skipEntry.ts);
+    score -= Math.min(0.85, 0.35 * skipEntry.count) * recentness;
+  }
+
+  if(sessionSet.has(product.id)) score -= 0.5;                 // evitar repetir en la misma sesión de scroll
+
+  // exploración: más ruido cuando conocemos poco al usuario, casi nada cuando ya aprendimos de él
+  const confidence = Math.min(1, prefs.totalSignals / 25);
+  const noiseAmplitude = 0.14 * (1 - confidence) + 0.02;
+  score += (Math.random()*2-1) * noiseAmplitude;
+
   return score;
 }
+
 function buildFeed(){
   const prefs = loadPrefs();
-  const pool = [...state.products];
-  let scored = pool.map(p=>({p, s:scoreProduct(p, prefs)})).sort((a,b)=>b.s-a.s);
-  // ~15% exploración: mezclar un ítem random cada 6 posiciones
-  const explore = 0.15;
+  const sessionSet = new Set(prefs.session.slice(-12));
+  // filtrar productos rechazados con fuerza y recientemente, para no insistir
+  const pool = state.products.filter(p=>{
+    const sk = prefs.skipped[p.id];
+    if(!sk) return true;
+    return !(sk.count>=3 && decayFactor(sk.ts) > 0.6);
+  });
+  const finalPool = pool.length ? pool : state.products;
+
+  let scored = finalPool
+    .map(p=>({p, s:scoreProduct(p, prefs, {sessionSet})}))
+    .sort((a,b)=>b.s-a.s);
+
+  // exploración adaptativa: epsilon baja de ~25% (usuario nuevo) a un piso de 6% (usuario ya conocido)
+  const confidence = Math.min(1, prefs.totalSignals / 25);
+  const epsilon = 0.25 - confidence*0.19;
   let ordered = [];
   const rest = [...scored];
   while(rest.length){
-    if(Math.random() < explore && rest.length>1){
+    if(Math.random() < epsilon && rest.length>1){
       const idx = Math.floor(Math.random()*rest.length);
       ordered.push(rest.splice(idx,1)[0]);
     } else {
       ordered.push(rest.shift());
     }
   }
-  // diversidad: evitar 3 seguidas de misma categoría
+
+  // diversidad real: si insertar el siguiente ítem generaría 3 seguidos de la misma categoría,
+  // buscamos más adelante en la cola el primer ítem de otra categoría y lo adelantamos.
   const final = [];
-  for(const item of ordered){
-    if(final.length>=2 && final[final.length-1].p.category===item.p.category && final[final.length-2].p.category===item.p.category){
-      const swapIdx = ordered.findIndex((o,i)=> o!==item && o.p.category!==item.p.category);
-      // simple: solo empujar al final
-      final.push(item);
-    } else {
-      final.push(item);
+  while(ordered.length){
+    const next = ordered[0];
+    const lastTwoSame = final.length>=2
+      && final[final.length-1].p.category===next.p.category
+      && final[final.length-2].p.category===next.p.category;
+    if(lastTwoSame){
+      const altIdx = ordered.findIndex(o=> o.p.category!==next.p.category);
+      if(altIdx > 0){ final.push(ordered.splice(altIdx,1)[0]); continue; }
     }
+    final.push(ordered.shift());
   }
   return final.map(x=>x.p);
 }
@@ -500,6 +618,8 @@ function isActive(href){ return (state.route==='#/' ? '#/' : state.route) === hr
 
 function shellHTML(innerHTML){
   const s = state.settings;
+  const route = state.route.split('?')[0];
+  const hideFabs = route==='#/carrito' || route==='#/checkout'; // hay barra de pago fija abajo, evitamos superposición
   return `
   <aside class="sidebar">
     <div class="brand-row">
@@ -529,8 +649,8 @@ function shellHTML(innerHTML){
     <div class="container">${innerHTML}</div>
     ${footerHTML()}
   </main>
-  <button class="cart-fab" onclick="location.hash='#/carrito'"><i data-lucide="shopping-cart" class="icon"></i>${cartCount()?`<span class="count">${cartCount()}</span>`:''}</button>
-  ${whatsappFabHTML()}
+  ${hideFabs ? '' : `<button class="cart-fab" onclick="location.hash='#/carrito'"><i data-lucide="shopping-cart" class="icon"></i>${cartCount()?`<span class="count">${cartCount()}</span>`:''}</button>`}
+  ${hideFabs ? '' : whatsappFabHTML()}
   `;
 }
 function whatsappFabHTML(){
@@ -730,15 +850,18 @@ function renderSuggestedStrip(){
   const strip = $('#suggested-strip');
   if(!strip) return;
   const prefs = loadPrefs();
-  const topCat = Object.entries(prefs.categories).sort((a,b)=>b[1]-a[1])[0]?.[0];
-  const avgPrice = prefs.priceCount ? prefs.priceSum/prefs.priceCount : null;
+  const topCat = Object.entries(prefs.categories)
+    .map(([k,v])=>[k, decayedValue(v)])
+    .sort((a,b)=>b[1]-a[1])[0]?.[0];
+  const hasPriceData = prefs.priceCount >= 2;
   const list = [...state.products].sort((a,b)=>scoreProduct(b,prefs)-scoreProduct(a,prefs)).slice(0,10);
   strip.innerHTML = list.map(p=>{
     let why = 'Recomendado';
     if(topCat && p.category===topCat) why = `Por ${topCat}`;
-    else if(avgPrice && Math.abs(p.price-avgPrice)/avgPrice<0.25) why = 'En tu rango de precio';
+    else if(hasPriceData && priceFit(p.price, prefs) > 0.75) why = 'En tu rango de precio';
+    else if(!prefs.seen[p.id]) why = 'Nuevo para vos';
     return `<a class="sugg-card" href="#/producto-${p.id}" onclick="event.preventDefault(); addToCart(state.products.find(x=>x.id==='${p.id}'))">
-      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}"></div>
+      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
       <div class="why">${why}</div>
       <div class="title">${p.title}</div>
     </a>`;
@@ -786,7 +909,7 @@ function viewCarrito(){
     <div>
       ${state.cart.map(i=>`
         <div class="cart-item">
-          <img src="${i.image_url}" alt="${i.title}">
+          <img src="${i.image_url}" alt="${i.title}" loading="lazy">
           <div class="info">
             <div class="cat">${i.category||''}</div>
             <div class="name">${i.title}</div>
@@ -804,7 +927,7 @@ function viewCarrito(){
       <div class="summary-row"><span>Subtotal</span><span>${fmtMoney(cartTotal())}</span></div>
       <div class="summary-row"><span>Envío</span><span>A definir</span></div>
       <div class="summary-row total"><span>Total</span><span>${fmtMoney(cartTotal())}</span></div>
-      <a class="btn btn-primary btn-block" href="#/checkout" style="margin-top:14px">Ir a pagar</a>
+      <a class="btn btn-primary btn-block cta-fixed" href="#/checkout" style="margin-top:14px">Ir a pagar</a>
     </div>
   </div>`;
 }
@@ -825,10 +948,10 @@ function viewCheckout(){
     <div>
       <div class="admin-card">
         <h3>Datos de contacto</h3>
-        <div class="field"><label>Nombre y apellido</label><input id="ck-name" value="${checkoutState.name}" placeholder="Nombre completo"></div>
+        <div class="field"><label>Nombre y apellido</label><input id="ck-name" value="${checkoutState.name}" placeholder="Nombre completo" autocomplete="name" inputmode="text"></div>
         <div class="field-row">
-          <div class="field"><label>WhatsApp</label><input id="ck-phone" value="${checkoutState.phone}" placeholder="11 2233 4455"></div>
-          <div class="field"><label>Email</label><input id="ck-email" value="${checkoutState.email}" placeholder="tu@email.com"></div>
+          <div class="field"><label>WhatsApp</label><input id="ck-phone" value="${checkoutState.phone}" placeholder="11 2233 4455" autocomplete="tel" inputmode="tel" type="tel"></div>
+          <div class="field"><label>Email</label><input id="ck-email" value="${checkoutState.email}" placeholder="tu@email.com" autocomplete="email" inputmode="email" type="email"></div>
         </div>
       </div>
       <div class="admin-card">
@@ -837,7 +960,7 @@ function viewCheckout(){
           const labels = {retiro:['Retiro en tienda','Coordinamos horario por WhatsApp'], envio:['Envío a domicilio','Ingresá tu dirección'], convenir:['A convenir','Vemos la mejor opción juntos']};
           return `<label class="option-card ${checkoutState.delivery===v?'selected':''}"><input type="radio" name="delivery" ${checkoutState.delivery===v?'checked':''} onchange="setDelivery('${v}')"><div><div class="ot">${labels[v][0]}</div><div class="os">${labels[v][1]}</div></div></label>`;
         }).join('')}
-        ${checkoutState.delivery==='envio'? `<div class="field" style="margin-top:8px"><label>Dirección</label><input id="ck-address" value="${checkoutState.address}" placeholder="Calle, número, ciudad"></div>` : ''}
+        ${checkoutState.delivery==='envio'? `<div class="field" style="margin-top:8px"><label>Dirección</label><input id="ck-address" value="${checkoutState.address}" placeholder="Calle, número, ciudad" autocomplete="street-address"></div>` : ''}
       </div>
       <div class="admin-card">
         <h3>Pago</h3>
@@ -848,7 +971,7 @@ function viewCheckout(){
       <h3 style="margin-top:0;font-size:14px">Resumen</h3>
       ${state.cart.map(i=>`<div class="summary-row"><span>${i.qty}× ${i.title}</span><span>${fmtMoney(i.price*i.qty)}</span></div>`).join('')}
       <div class="summary-row total"><span>Total</span><span>${fmtMoney(cartTotal())}</span></div>
-      <button class="btn ${checkoutState.payment==='mp'?'btn-mp':'btn-primary'} btn-block" style="margin-top:14px" onclick="submitOrder()">
+      <button class="btn ${checkoutState.payment==='mp'?'btn-mp':'btn-primary'} btn-block cta-fixed" style="margin-top:14px" onclick="submitOrder()">
         ${checkoutState.payment==='mp' ? 'Pagar con Mercado Pago' : 'Confirmar pedido'}
       </button>
     </div>
@@ -1028,7 +1151,7 @@ function adminProductos(){
     <span class="mini">${list.length} productos</span>
     <button class="btn btn-primary btn-sm" onclick="openProductModal('new')"><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Nuevo producto</button>
   </div>
-  <table class="admin-table">
+  <div class="table-scroll"><table class="admin-table">
     <thead><tr><th></th><th>Título</th><th>Categoría</th><th>Precio</th><th>Match</th><th>Estado</th><th></th></tr></thead>
     <tbody>
       ${list.map(p=>`<tr>
@@ -1039,7 +1162,7 @@ function adminProductos(){
         <button class="icon-btn" onclick="deleteProduct('${p.id}')"><i data-lucide="trash-2" class="icon" style="width:15px;height:15px;color:#c0362c"></i></button></td>
       </tr>`).join('')}
     </tbody>
-  </table>`;
+  </table></div>`;
 }
 function openProductModal(mode, product){
   adminModal = {mode, product: product || {id:uid(), title:'', brand:'', category:'Tecnología', price:0, original_price:0, match_score:80, image_url:'', sort_order: (allDemoProducts().length+1), active:true}};
@@ -1229,10 +1352,10 @@ function adminOrders(){
   const orders = lsGet('akari_demo_orders', []);
   if(!orders.length) return `<div class="empty-state">Todavía no hay pedidos.</div>`;
   return `
-  <table class="admin-table">
+  <div class="table-scroll"><table class="admin-table">
     <thead><tr><th>Ref</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Pago</th><th>Fecha</th></tr></thead>
     <tbody>${orders.map(o=>`<tr><td>${o.ref}</td><td>${o.customer.name}<br><span class="mini">${o.customer.phone}</span></td><td>${fmtMoney(o.total)}</td><td>${o.delivery}</td><td>${o.payment}</td><td>${new Date(o.created_at).toLocaleString('es-AR')}</td></tr>`).join('')}</tbody>
-  </table>`;
+  </table></div>`;
 }
 
 /* -- Tienda -- */

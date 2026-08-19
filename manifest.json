@@ -1,0 +1,16 @@
+{
+  "name": "AKARI Electro & Home",
+  "short_name": "AKARI",
+  "description": "Tecnología, hogar y accesorios que aprenden lo que te gusta.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#6b8f35",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "./logo-mascot-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./logo-mascot-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./logo-mascot-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

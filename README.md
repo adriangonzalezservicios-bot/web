@@ -76,6 +76,29 @@ que crees en el paso 1 de arriba.
   front.
 - Mobile-first.
 
+## Optimización mobile (checklist aplicado)
+- **Instalable como app**: `manifest.json` + meta tags para "Agregar a
+  pantalla de inicio" en iOS/Android — abre sin barra del navegador,
+  ideal para uso diario. *Importante:* reemplazá `logo-mascot.png` por
+  un ícono cuadrado de al menos 512×512px para que se vea bien como
+  ícono de app.
+- **Sin zoom accidental al tocar inputs**: todos los campos de
+  formulario usan `font-size:16px` (por debajo de eso, iOS hace zoom
+  automático al enfocar un campo).
+- **Botones y áreas táctiles** de al menos 40×40px, con
+  `touch-action:manipulation` para que no haya demora al tocar.
+- **Barra de pago fija** en Carrito y Checkout: el botón principal
+  siempre está a mano abajo, sin scrollear.
+- **Áreas seguras** (`env(safe-area-inset-*)`) para que nada quede
+  tapado por el notch o la barra de gestos del celular.
+- **Autocompletado nativo** en el checkout (`autocomplete`,
+  `inputmode`, `type=tel/email`) para cargar datos más rápido.
+- **Tablas del admin con scroll horizontal propio** en vez de romper
+  el layout en pantallas chicas.
+- **Feed swipe responsive**: se adapta a la altura real del celular
+  para no cortarse en pantallas chicas o en horizontal.
+- **Imágenes con `loading="lazy"`** fuera del primer scroll.
+
 ## Roadmap (no implementado aún)
 - URLs por producto (`/producto/slug`) para SEO de catálogo.
 - Subida de imágenes a Supabase Storage (hoy son URL).
