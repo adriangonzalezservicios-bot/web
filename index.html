@@ -80,18 +80,18 @@ function icons(){ if(window.lucide) lucide.createIcons(); }
 
 /* ---------- 3. Datos demo (fallback sin Supabase) ---------- */
 const DEMO_PRODUCTS = [
-  {id:'p1',title:'Auriculares Bluetooth AKARI Pulse', brand:'AKARI', category:'Tecnología', price:24999, original_price:32999, match_score:96, image_url:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600', sort_order:1, active:true},
-  {id:'p2',title:'Parlante portátil resistente al agua', brand:'SoundGo', category:'Tecnología', price:18999, original_price:0, match_score:91, image_url:'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600', sort_order:2, active:true},
-  {id:'p3',title:'Smartwatch AKARI Fit 2', brand:'AKARI', category:'Tecnología', price:39999, original_price:47999, match_score:98, image_url:'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600', sort_order:3, active:true},
-  {id:'p4',title:'Cargador rápido 30W USB-C', brand:'ZapCharge', category:'Tecnología', price:8999, original_price:0, match_score:88, image_url:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600', sort_order:4, active:true},
-  {id:'p5',title:'Set de sábanas 400 hilos', brand:'Casa Nova', category:'Hogar', price:27999, original_price:0, match_score:85, image_url:'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600', sort_order:5, active:true},
+  {id:'p1',title:'Auriculares Bluetooth AKARI Pulse', brand:'AKARI', category:'Tecnología', price:24999, original_price:32999, match_score:96, image_url:'https://images.unsplash.com/photo-1567928513899-997d98489fbd?w=600', sort_order:1, active:true},
+  {id:'p2',title:'Parlante portátil resistente al agua', brand:'SoundGo', category:'Tecnología', price:18999, original_price:0, match_score:91, image_url:'https://images.unsplash.com/photo-1542483381-41a479b1fb88?w=600', sort_order:2, active:true},
+  {id:'p3',title:'Smartwatch AKARI Fit 2', brand:'AKARI', category:'Tecnología', price:39999, original_price:47999, match_score:98, image_url:'https://images.unsplash.com/photo-1777496410128-926b2d0083f9?w=600', sort_order:3, active:true},
+  {id:'p4',title:'Cargador rápido 30W USB-C', brand:'ZapCharge', category:'Tecnología', price:8999, original_price:0, match_score:88, image_url:'https://images.unsplash.com/photo-1492107376256-4026437926cd?w=600', sort_order:4, active:true},
+  {id:'p5',title:'Set de sábanas 400 hilos', brand:'Casa Nova', category:'Hogar', price:27999, original_price:0, match_score:85, image_url:'https://images.unsplash.com/photo-1702501543049-4cb666eeda15?w=600', sort_order:5, active:true},
   {id:'p6',title:'Difusor de aromas con luz LED', brand:'Aroma+', category:'Hogar', price:15999, original_price:19999, match_score:93, image_url:'https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600', sort_order:6, active:true},
-  {id:'p7',title:'Set de 4 tazas de cerámica', brand:'Casa Nova', category:'Hogar', price:9999, original_price:0, match_score:80, image_url:'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600', sort_order:7, active:true},
-  {id:'p8',title:'Organizador modular de cocina', brand:'OrdenaYa', category:'Hogar', price:12999, original_price:0, match_score:78, image_url:'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600', sort_order:8, active:true},
-  {id:'p9',title:'Mochila urbana antirrobo', brand:'UrbanGo', category:'Accesorios', price:21999, original_price:26999, match_score:90, image_url:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600', sort_order:9, active:true},
-  {id:'p10',title:'Lentes de sol polarizados', brand:'SunLine', category:'Accesorios', price:11999, original_price:0, match_score:82, image_url:'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600', sort_order:10, active:true},
-  {id:'p11',title:'Billetera de cuero minimalista', brand:'UrbanGo', category:'Accesorios', price:9999, original_price:0, match_score:76, image_url:'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600', sort_order:11, active:true},
-  {id:'p12',title:'Correa deportiva para smartwatch', brand:'AKARI', category:'Accesorios', price:5999, original_price:0, match_score:87, image_url:'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600', sort_order:12, active:true},
+  {id:'p7',title:'Set de 4 tazas de cerámica', brand:'Casa Nova', category:'Hogar', price:9999, original_price:0, match_score:80, image_url:'https://images.unsplash.com/photo-1542556398-95fb5b9f9b48?w=600', sort_order:7, active:true},
+  {id:'p8',title:'Organizador modular de cocina', brand:'OrdenaYa', category:'Hogar', price:12999, original_price:0, match_score:78, image_url:'https://images.unsplash.com/photo-1512149599640-5f2b53232442?w=600', sort_order:8, active:true},
+  {id:'p9',title:'Mochila urbana antirrobo', brand:'UrbanGo', category:'Accesorios', price:21999, original_price:26999, match_score:90, image_url:'https://images.unsplash.com/photo-1616703055375-b5e495a5c6fe?w=600', sort_order:9, active:true},
+  {id:'p10',title:'Lentes de sol polarizados', brand:'SunLine', category:'Accesorios', price:11999, original_price:0, match_score:82, image_url:'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=600', sort_order:10, active:true},
+  {id:'p11',title:'Billetera de cuero minimalista', brand:'UrbanGo', category:'Accesorios', price:9999, original_price:0, match_score:76, image_url:'https://images.unsplash.com/photo-1579014134953-1580d7f123f3?w=600', sort_order:11, active:true},
+  {id:'p12',title:'Correa deportiva para smartwatch', brand:'AKARI', category:'Accesorios', price:5999, original_price:0, match_score:87, image_url:'https://images.unsplash.com/photo-1568614213568-aecdafaec17d?w=600', sort_order:12, active:true},
 ];
 const DEFAULT_SETTINGS = {
   brand_name:'AKARI', brand_tagline:'electro & home',
