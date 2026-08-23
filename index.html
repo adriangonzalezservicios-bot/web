@@ -703,6 +703,7 @@ function viewCheckout(){
       <div class="admin-card">
         <h3>Pago</h3>
         ${payOptions.map(o=>`<label class="option-card ${checkoutState.payment===o.v?'selected':''}"><input type="radio" name="payment" ${checkoutState.payment===o.v?'checked':''} onchange="setPayment('${o.v}')"><div><div class="ot">${o.t}</div><div class="os">${o.d}</div></div></label>`).join('')}
+        <div id="checkout-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:var(--r-sm);padding:12px;font-size:13px;margin-top:10px"></div>
       </div>
     </div>
     <div class="summary-box">
@@ -748,20 +749,42 @@ async function submitOrder(){
 
   if(checkoutState.payment==='mp'){
     if(!state.settings.mp_worker_url){
-      toast('Mercado Pago no está configurado. Contactá a la tienda.');
-      finalizeOrder(order); return;
+      showCheckoutError('Mercado Pago no está configurado todavía. Elegí otro método de pago o contactá a la tienda.');
+      return; // NO se finaliza el pedido: no hubo pago real
     }
+    const base = window.location.origin + window.location.pathname;
     try{
       const res = await fetch(state.settings.mp_worker_url, {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ items: order.items.map(i=>({title:i.title, quantity:i.qty, unit_price:i.price})), order_ref: order.ref })
+        body: JSON.stringify({
+          items: order.items.map(i=>({title:i.title, quantity:i.qty, unit_price:i.price})),
+          order_ref: order.ref,
+          success_url: base + '#/exito',
+          failure_url: base + '#/checkout',
+          pending_url: base + '#/exito'
+        })
       });
-      const data = await res.json();
-      if(data.init_point){ window.location.href = data.init_point; return; }
-      throw new Error('Sin init_point');
-    }catch(e){ console.warn('Worker MP no disponible:', e.message); toast('No se pudo iniciar Mercado Pago, revisá con la tienda.'); }
+      const data = await res.json().catch(()=>({}));
+      if(res.ok && data.init_point){
+        window.location.href = data.init_point;
+        return; // se va a Mercado Pago; el pedido queda "pendiente" hasta que vuelva
+      }
+      // La API respondió pero sin init_point: mostramos el motivo real si vino
+      const reason = data.error || data.detail?.message || 'Mercado Pago no devolvió un link de pago válido.';
+      console.error('Worker MP respondió sin init_point:', data);
+      showCheckoutError('No pudimos iniciar el pago con Mercado Pago (' + reason + '). Probá de nuevo o elegí otro método.');
+    }catch(e){
+      console.error('Worker MP no disponible:', e.message);
+      showCheckoutError('No pudimos conectar con Mercado Pago. Probá de nuevo en un momento o elegí otro método de pago.');
+    }
+    return; // IMPORTANTE: si llegamos acá, el pago falló — nunca marcamos el pedido como recibido
   }
   finalizeOrder(order);
+}
+function showCheckoutError(msg){
+  toast(msg);
+  const box = $('#checkout-error');
+  if(box){ box.textContent = msg; box.style.display = 'block'; }
 }
 function finalizeOrder(order){
   state.lastOrder = order; lsSet('akari_last_order', order);
