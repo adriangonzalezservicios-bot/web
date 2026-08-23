@@ -902,6 +902,54 @@ function adminProductos(){
     </tbody>
   </table></div>`;
 }
+function updateImagePreview(url){
+  const box = $('#pm-image-preview');
+  if(!box) return;
+  box.innerHTML = url ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover">` : `<i data-lucide="image" class="icon" style="color:var(--muted);width:28px;height:28px"></i>`;
+  icons();
+}
+async function handleProductImageUpload(inputEl){
+  const file = inputEl.files?.[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ toast('Elegí un archivo de imagen'); return; }
+  if(file.size > 5*1024*1024){ toast('La imagen no puede pesar más de 5MB'); return; }
+  const status = $('#pm-upload-status');
+
+  if(!HAS_SUPABASE || !state.session){
+    // Modo demo o sin sesión válida: vista previa local únicamente (no persiste en la nube)
+    const reader = new FileReader();
+    reader.onload = () => {
+      $('#pm-image').value = reader.result;
+      updateImagePreview(reader.result);
+      if(status) status.textContent = 'Vista previa local (sin Supabase, no se guarda en la nube).';
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  if(status) status.textContent = 'Subiendo...';
+  try{
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    const path = `${Date.now()}-${uid()}.${ext}`;
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/product-images/${path}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${state.session.access_token}`,
+        'Content-Type': file.type
+      },
+      body: file
+    });
+    if(!res.ok){ const t = await res.text().catch(()=>''); throw new Error(t || res.statusText); }
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/product-images/${path}`;
+    $('#pm-image').value = publicUrl;
+    updateImagePreview(publicUrl);
+    if(status) status.textContent = 'Imagen subida ✔';
+  }catch(e){
+    if(status) status.textContent = 'Error al subir: ' + e.message;
+    toast('No se pudo subir la imagen');
+  }
+}
 function openProductModal(mode, product){
   adminModal = {mode, product: product || {id:uid(), title:'', brand:'', category:'Tecnología', price:0, original_price:0, match_score:80, image_url:'', sort_order: (allDemoProducts().length+1), active:true}};
   render();
@@ -926,7 +974,20 @@ function adminModalHTML(){
         <div class="field"><label>Match %</label><input id="pm-match" type="number" value="${p.match_score||80}"></div>
         <div class="field"><label>Orden</label><input id="pm-sort" type="number" value="${p.sort_order||1}"></div>
       </div>
-      <div class="field"><label>URL de imagen</label><input id="pm-image" value="${p.image_url}"></div>
+      <div class="field">
+        <label>Imagen del producto</label>
+        <div id="pm-image-preview" style="width:100%;aspect-ratio:1/1;max-width:160px;border-radius:var(--r-sm);background:var(--soft);border:1px solid var(--border);overflow:hidden;margin-bottom:10px;display:flex;align-items:center;justify-content:center">
+          ${p.image_url ? `<img src="${p.image_url}" style="width:100%;height:100%;object-fit:cover">` : `<i data-lucide="image" class="icon" style="color:var(--muted);width:28px;height:28px"></i>`}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <label class="btn btn-outline btn-sm" style="cursor:pointer">
+            <i data-lucide="upload" class="icon" style="width:14px;height:14px"></i>Examinar...
+            <input type="file" id="pm-image-file" accept="image/*" style="display:none" onchange="handleProductImageUpload(this)">
+          </label>
+          <span id="pm-upload-status" class="mini"></span>
+        </div>
+        <input id="pm-image" value="${p.image_url}" placeholder="...o pegá una URL de imagen" style="margin-top:8px" oninput="updateImagePreview(this.value)">
+      </div>
       <div class="toggle-row"><span class="mini" style="font-weight:700;color:var(--text)">Activo</span><button class="switch ${p.active?'on':''}" id="pm-active" onclick="this.classList.toggle('on')"></button></div>
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="btn btn-outline btn-block" onclick="closeModal()">Cancelar</button>
