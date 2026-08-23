@@ -56,13 +56,24 @@ export default {
           currency_id: "ARS",
         })),
         external_reference: orderRef,
-        back_urls: {
-          success: body.success_url || "",
-          failure: body.failure_url || "",
-          pending: body.pending_url || "",
-        },
-        auto_return: "approved",
       };
+
+      // back_urls + auto_return son opcionales para Mercado Pago, pero si se
+      // envían, TIENEN que ser URLs absolutas válidas (http/https) — si no,
+      // la API rechaza la preferencia entera con un 400. Por eso solo los
+      // agregamos cuando el llamador realmente mandó una success_url válida.
+      const isValidUrl = (u) => {
+        try { const parsed = new URL(u); return parsed.protocol === "http:" || parsed.protocol === "https:"; }
+        catch { return false; }
+      };
+      if (isValidUrl(body.success_url)) {
+        preference.back_urls = {
+          success: body.success_url,
+          failure: isValidUrl(body.failure_url) ? body.failure_url : body.success_url,
+          pending: isValidUrl(body.pending_url) ? body.pending_url : body.success_url,
+        };
+        preference.auto_return = "approved";
+      }
 
       const mpRes = await fetch("https://api.mercadopago.com/checkout/preferences", {
         method: "POST",
@@ -76,7 +87,12 @@ export default {
       const data = await mpRes.json();
 
       if (!mpRes.ok) {
-        return new Response(JSON.stringify({ error: "Error de Mercado Pago", detail: data }), {
+        const reason =
+          (Array.isArray(data.cause) && data.cause[0]?.description) ||
+          data.message ||
+          data.error ||
+          "Mercado Pago rechazó la preferencia de pago.";
+        return new Response(JSON.stringify({ error: reason, detail: data }), {
           status: 502,
           headers: { "Content-Type": "application/json", ...corsHeaders },
         });

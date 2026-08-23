@@ -1163,9 +1163,19 @@ async function testWorker(){
   const el = $('#mp-test-result');
   if(!url){ el.textContent='Ingresá la URL del Worker primero.'; return; }
   el.textContent = 'Probando...';
+  const base = window.location.origin + window.location.pathname;
   try{
-    const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({items:[{title:'Test', quantity:1, unit_price:100}], order_ref:'TEST'})});
-    el.textContent = res.ok ? 'Worker respondió correctamente ✔' : `Worker respondió con error ${res.status}`;
+    const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      items:[{title:'Test', quantity:1, unit_price:100}], order_ref:'TEST',
+      success_url: base + '#/exito', failure_url: base + '#/checkout', pending_url: base + '#/exito'
+    })});
+    const data = await res.json().catch(()=>({}));
+    if(res.ok && data.init_point){
+      el.textContent = 'Worker respondió correctamente ✔ (preferencia creada: ' + data.preference_id + ')';
+    } else {
+      el.textContent = 'Error: ' + (data.error || ('el Worker respondió ' + res.status + ' sin detalle'));
+      console.warn('Detalle completo del error de MP:', data.detail);
+    }
   }catch(e){ el.textContent = 'No se pudo contactar al Worker: '+e.message; }
 }
 
