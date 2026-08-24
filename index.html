@@ -440,9 +440,11 @@ function viewHome(){
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
   <section class="video-banner">
-    <video autoplay muted loop playsinline preload="auto" poster="./akari-logo-full.png">
-      <source src="./banner.mp4" type="video/mp4">
-    </video>
+    <div class="video-frame">
+      <video autoplay muted loop playsinline preload="auto" poster="./akari-logo-full.png">
+        <source src="./banner.mp4" type="video/mp4">
+      </video>
+    </div>
   </section>
 
   <section class="block">
