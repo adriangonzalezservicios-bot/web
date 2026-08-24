@@ -110,8 +110,6 @@ main{width:100%;max-width:100%;min-width:0}
 .site-banner p{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 22px;max-width:100%}
 .hero-cta{display:flex;flex-direction:column;gap:10px;position:relative;z-index:2}
 .hero-cta .btn{width:100%}
-.banner-mascot{position:relative;z-index:2;display:flex;justify-content:center;margin-top:-4px}
-.banner-mascot img{width:150px;height:150px;object-fit:contain;animation:mascotFloat 4.5s ease-in-out infinite}
 .banner-sparkle{position:absolute;z-index:1;color:var(--brand);opacity:.5;animation:sparkleFloat 3.6s ease-in-out infinite}
 .banner-sparkle svg,.banner-sparkle .icon{width:22px;height:22px}
 .banner-sparkle.s1{top:14%;right:12%;animation-delay:0s}
@@ -123,16 +121,12 @@ main{width:100%;max-width:100%;min-width:0}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
 }
-@keyframes mascotFloat{
-  0%,100%{transform:translateY(0) rotate(-2deg)}
-  50%{transform:translateY(-12px) rotate(2deg)}
-}
 @keyframes sparkleFloat{
   0%,100%{transform:translateY(0) scale(1);opacity:.35}
   50%{transform:translateY(-10px) scale(1.2);opacity:.85}
 }
 @media (prefers-reduced-motion:reduce){
-  .site-banner,.banner-mascot img,.banner-sparkle{animation:none}
+  .site-banner,.banner-sparkle{animation:none}
 }
 
 /* Stats, categorías y tarjetas: una sola columna vertical en mobile */
@@ -322,9 +316,7 @@ table.admin-table tr:last-child td{border-bottom:none}
   .container{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
 
   .site-banner{flex-direction:row;padding:48px 40px;gap:32px;align-items:center;margin-bottom:36px}
-  .banner-content{flex:1.1}
-  .banner-mascot{flex:.9;margin-top:0}
-  .banner-mascot img{width:220px;height:220px}
+  .banner-content{flex:1}
   .banner-sparkle svg,.banner-sparkle .icon{width:30px;height:30px}
   .site-banner h1{font-size:38px}
   .site-banner p{max-width:46ch}
