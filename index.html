@@ -439,35 +439,10 @@ function viewHome(){
   const cats = ['Todas', ...new Set(state.products.map(p=>p.category))];
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
-  <section class="site-banner">
-    <div class="banner-sparkle s1"><i data-lucide="sparkles" class="icon"></i></div>
-    <div class="banner-sparkle s2"><i data-lucide="star" class="icon"></i></div>
-    <div class="banner-sparkle s3"><i data-lucide="sparkles" class="icon"></i></div>
-    <div class="banner-content">
-      <span class="eyebrow"><i data-lucide="sparkles" class="icon" style="width:14px;height:14px"></i> Discovery shopping</span>
-      <h1>${s.hero_title}</h1>
-      <p>${s.hero_text}</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="#/productos"><i data-lucide="grid-3x3" class="icon"></i>Ver catálogo</a>
-        <a class="btn btn-outline" href="#feed-section" onclick="document.getElementById('feed-section').scrollIntoView({behavior:'smooth'})"><i data-lucide="hand" class="icon"></i>Descubrir para mí</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="stats-row block">
-    <div class="stat-card"><div class="stat-num">${state.products.length}+</div><div class="stat-label">productos activos</div></div>
-    <div class="stat-card"><div class="stat-num">${new Set(state.products.map(p=>p.category)).size}</div><div class="stat-label">categorías</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:var(--mp)">MP</div><div class="stat-label">Pagos con Mercado Pago</div></div>
-  </section>
-
-  <section class="block">
-    <div class="section-head"><h2>Por qué comprar en ${s.brand_name}</h2></div>
-    <div class="benefits">
-      <div class="benefit-card"><div class="ico"><i data-lucide="sparkles" class="icon"></i></div><h3>Feed que aprende</h3><p>Cuanto más deslizás, mejor te conoce.</p></div>
-      <div class="benefit-card"><div class="ico"><i data-lucide="truck" class="icon"></i></div><h3>Envío o retiro</h3><p>Elegís cómo recibir tu pedido.</p></div>
-      <div class="benefit-card"><div class="ico"><i data-lucide="shield-check" class="icon"></i></div><h3>Pago seguro</h3><p>Mercado Pago o coordinación directa.</p></div>
-      <div class="benefit-card"><div class="ico"><i data-lucide="message-circle" class="icon"></i></div><h3>Soporte real</h3><p>Te acompañamos por WhatsApp.</p></div>
-    </div>
+  <section class="video-banner">
+    <video autoplay muted loop playsinline preload="auto" poster="./akari-logo-full.png">
+      <source src="./banner.mp4" type="video/mp4">
+    </video>
   </section>
 
   <section class="block">
