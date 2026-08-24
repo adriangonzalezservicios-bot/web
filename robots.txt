@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.akarielectrohome.com/sitemap.xml
+Sitemap: https://akari.com.ar/sitemap.xml

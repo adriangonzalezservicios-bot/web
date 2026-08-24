@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.akarielectrohome.com/</loc>
+    <loc>https://akari.com.ar/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 </urlset>
 <!--
-  Reemplazar "www.akarielectrohome.com" por tu dominio real al publicar.
+  Dominio real: akari.com.ar
   Como el sitio es una SPA de una sola URL (index.html), el sitemap
   hoy tiene una sola entrada. Ver docs/SEO-HOME.md y el roadmap en el
   README para agregar rutas /producto/slug en el futuro.
