@@ -354,6 +354,11 @@ const NAV_ITEMS = [
 ];
 function isActive(href){ return (state.route==='#/' ? '#/' : state.route) === href || (href!=='#/' && state.route.startsWith(href)); }
 
+function brandMarkHTML(){
+  const s = state.settings;
+  const src = s.logo_url || './logo-mascot-icon-512.png';
+  return `<div class="brand-mark brand-mark-img"><img src="${src}" alt="${s.brand_name}" onerror="this.parentElement.textContent='${(s.brand_name||'A')[0]}'; this.parentElement.classList.remove('brand-mark-img');"></div>`;
+}
 function shellHTML(innerHTML){
   const s = state.settings;
   const route = state.route.split('?')[0];
@@ -361,7 +366,7 @@ function shellHTML(innerHTML){
   return `
   <aside class="sidebar">
     <div class="brand-row">
-      <div class="brand-mark">${(s.brand_name||'A')[0]}</div>
+      ${brandMarkHTML()}
       <div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div>
     </div>
     <div class="search-box"><i data-lucide="search" class="icon" style="color:var(--muted)"></i><input id="search-input-desk" placeholder="Buscar productos..." value=""></div>
@@ -373,13 +378,13 @@ function shellHTML(innerHTML){
 
   <div class="topbar">
     <button class="icon-btn" onclick="toggleDrawer(true)"><i data-lucide="menu" class="icon"></i></button>
-    <div class="brand-row"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div class="brand-name">${s.brand_name}</div></div>
+    <div class="brand-row">${brandMarkHTML()}<div class="brand-name">${s.brand_name}</div></div>
     <div style="flex:1"></div>
     <a class="icon-btn" href="#/carrito" style="position:relative"><i data-lucide="shopping-cart" class="icon"></i></a>
   </div>
   <div class="drawer-backdrop ${state.drawerOpen?'open':''}" onclick="toggleDrawer(false)"></div>
   <div class="drawer ${state.drawerOpen?'open':''}">
-    <div class="brand-row"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div></div>
+    <div class="brand-row">${brandMarkHTML()}<div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div></div>
     <nav>${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}" onclick="toggleDrawer(false)"><i data-lucide="${n.icon}" class="icon"></i>${n.label}</a>`).join('')}</nav>
   </div>
 
@@ -407,7 +412,7 @@ function footerHTML(){
   <footer>
     <div class="footer-inner">
       <div>
-        <div class="brand-row" style="padding-bottom:8px"><div class="brand-mark">${(s.brand_name||'A')[0]}</div><div class="brand-name">${s.brand_name}</div></div>
+        <div class="brand-row" style="padding-bottom:8px">${brandMarkHTML()}<div class="brand-name">${s.brand_name}</div></div>
         <p class="mini" style="max-width:32ch;line-height:1.5">Tienda de descubrimiento de tecnología, hogar y accesorios. Deslizá, descubrí, comprá.</p>
       </div>
       <div><h4>Tienda</h4>
@@ -434,8 +439,11 @@ function viewHome(){
   const cats = ['Todas', ...new Set(state.products.map(p=>p.category))];
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
-  <section class="hero">
-    <div>
+  <section class="site-banner">
+    <div class="banner-sparkle s1"><i data-lucide="sparkles" class="icon"></i></div>
+    <div class="banner-sparkle s2"><i data-lucide="star" class="icon"></i></div>
+    <div class="banner-sparkle s3"><i data-lucide="sparkles" class="icon"></i></div>
+    <div class="banner-content">
       <span class="eyebrow"><i data-lucide="sparkles" class="icon" style="width:14px;height:14px"></i> Discovery shopping</span>
       <h1>${s.hero_title}</h1>
       <p>${s.hero_text}</p>
@@ -444,8 +452,8 @@ function viewHome(){
         <a class="btn btn-outline" href="#feed-section" onclick="document.getElementById('feed-section').scrollIntoView({behavior:'smooth'})"><i data-lucide="hand" class="icon"></i>Descubrir para mí</a>
       </div>
     </div>
-    <div class="hero-visual">
-      <img src="${destacados[0]?.image_url||''}" alt="${destacados[0]?.title||''}" style="border-radius:16px;aspect-ratio:4/3;object-fit:cover">
+    <div class="banner-mascot">
+      <img src="./logo-mascot-icon-512.png" alt="Mascota AKARI">
     </div>
   </section>
 
