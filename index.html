@@ -436,7 +436,6 @@ function footerHTML(){
 /* ---------- 10. Vista: Inicio ---------- */
 function viewHome(){
   const s = state.settings;
-  const cats = ['Todas', ...new Set(state.products.map(p=>p.category))];
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
   <section class="video-banner">
@@ -445,11 +444,6 @@ function viewHome(){
         <source src="./banner.mp4" type="video/mp4">
       </video>
     </div>
-  </section>
-
-  <section class="block">
-    <div class="section-head"><h2>Categorías</h2></div>
-    <div class="pills">${cats.map(c=>`<a class="pill" href="#/productos?cat=${encodeURIComponent(c)}">${c}</a>`).join('')}</div>
   </section>
 
   <section class="block" id="feed-section">
