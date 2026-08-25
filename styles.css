@@ -95,15 +95,19 @@ main{width:100%;max-width:100%;min-width:0}
 .btn-sm{padding:8px 14px;font-size:13px}
 .btn-danger{background:#fff;color:#c0362c;border:1px solid #f1c6c1}
 
-/* ---------- Banner de video ---------- */
+/* ---------- Banner de video (marco vidrio esmerilado) ---------- */
 .video-banner{
   border-radius:var(--r-lg);margin-bottom:28px;width:100%;
-  background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);
+  background:rgba(255,255,255,.4);
+  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 20px 44px -20px rgba(15,18,24,.28);
   padding:10px;
 }
 .video-banner .video-frame{
   border-radius:calc(var(--r-lg) - 6px);overflow:hidden;background:var(--soft);
   aspect-ratio:1280/536;width:100%;
+  border:1px solid rgba(255,255,255,.5);
 }
 .video-banner video{width:100%;height:100%;object-fit:cover;display:block}
 
@@ -207,6 +211,9 @@ footer{border-top:1px solid var(--border);background:#fff;margin-top:20px;width:
 .footer-inner h4{font-size:13px;margin:0 0 10px}
 .footer-inner a{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
 .footer-inner a:hover{color:var(--brand-dark)}
+.social-row{display:flex;gap:8px;margin-top:12px}
+.social-btn{width:34px;height:34px;border-radius:50%;background:var(--soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--brand-dark)}
+.social-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
 .footer-bottom{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:14px 15px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);width:100%}
 
 /* ---------- Filters / product list ---------- */
@@ -269,6 +276,28 @@ table.admin-table tr:last-child td{border-bottom:none}
 .modal-backdrop{position:fixed;inset:0;background:rgba(15,18,24,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal{background:#fff;border-radius:var(--r-lg);padding:20px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto}
 .modal h3{margin-top:0}
+
+/* ---------- Detalle de producto (modal expandido) ---------- */
+.pd-backdrop{animation:pdFadeIn .2s ease}
+.pd-modal{
+  position:relative;background:#fff;border-radius:var(--r-lg);overflow:hidden;
+  width:100%;max-width:420px;max-height:92vh;overflow-y:auto;
+  animation:pdScaleIn .28s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 30px 60px -20px rgba(15,18,24,.5);
+}
+.pd-close{
+  position:absolute;top:12px;right:12px;z-index:4;
+  background:rgba(255,255,255,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.6);border-radius:50%;
+}
+.pd-media{position:relative;width:100%;aspect-ratio:1/1;background:var(--soft)}
+.pd-media img{width:100%;height:100%;object-fit:cover;display:block}
+.pd-body{padding:18px}
+.pd-title{font-size:19px;font-weight:800;margin:4px 0 0;line-height:1.25}
+@keyframes pdFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pdScaleIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@media (prefers-reduced-motion:reduce){.pd-backdrop,.pd-modal{animation:none}}
+
 .admin-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:18px;margin-bottom:16px;width:100%}
 .admin-card h3{margin:0 0 14px;font-size:14px}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}

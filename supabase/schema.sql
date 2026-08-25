@@ -44,7 +44,10 @@ create table if not exists public.site_settings (
   live_active boolean default true,
   live_title text default 'Facebook Live: nuevos ingresos de la semana',
   live_when text default 'Viernes 19:00 hs',
-  live_url text default ''
+  live_url text default '',
+  instagram_url text default '',
+  facebook_url text default '',
+  tiktok_url text default ''
 );
 
 insert into public.site_settings (id) values (1)

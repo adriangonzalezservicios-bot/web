@@ -100,7 +100,8 @@ const DEFAULT_SETTINGS = {
   hero_text:'Deslizá tecnología, hogar y accesorios como en tu red favorita. AKARI aprende de cada Me gusta para mostrarte más de lo que buscás — y menos de lo que no.',
   pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
   whatsapp:'', email:'', currency:'ARS',
-  live_active:true, live_title:'Facebook Live: nuevos ingresos de la semana', live_when:'Viernes 19:00 hs', live_url:''
+  live_active:true, live_title:'Facebook Live: nuevos ingresos de la semana', live_when:'Viernes 19:00 hs', live_url:'',
+  instagram_url:'', facebook_url:'', tiktok_url:''
 };
 
 /* ---------- 4. Estado global ---------- */
@@ -406,6 +407,16 @@ function whatsappFabHTML(){
   </a>`;
 }
 function toggleDrawer(v){ state.drawerOpen=v; render(); }
+function socialLinksHTML(){
+  const s = state.settings;
+  const links = [];
+  if(s.instagram_url) links.push({url:s.instagram_url, icon:'instagram', label:'Instagram'});
+  if(s.facebook_url) links.push({url:s.facebook_url, icon:'facebook', label:'Facebook'});
+  if(s.tiktok_url) links.push({url:s.tiktok_url, icon:'tiktok', label:'TikTok'});
+  if(!links.length) return '';
+  const tiktokSvg = `<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16.6 5.82c-.9-.98-1.4-2.26-1.4-3.62h-3.3v13.44c0 1.62-1.32 2.94-2.94 2.94a2.94 2.94 0 0 1 0-5.88c.28 0 .55.04.8.12V9.5a6.3 6.3 0 0 0-.8-.05A6.24 6.24 0 0 0 3 15.68a6.24 6.24 0 0 0 6.24 6.24 6.24 6.24 0 0 0 6.24-6.24V9.01a9.6 9.6 0 0 0 5.6 1.8V7.5c-1.61 0-3.06-.6-4.48-1.68Z"/></svg>`;
+  return `<div class="social-row">${links.map(l=>`<a class="social-btn" href="${l.url}" target="_blank" rel="noopener" title="${l.label}">${l.icon==='tiktok'?tiktokSvg:`<i data-lucide="${l.icon}" class="icon" style="width:18px;height:18px"></i>`}</a>`).join('')}</div>`;
+}
 function footerHTML(){
   const s = state.settings;
   return `
@@ -414,6 +425,7 @@ function footerHTML(){
       <div>
         <div class="brand-row" style="padding-bottom:8px">${brandMarkHTML()}<div class="brand-name">${s.brand_name}</div></div>
         <p class="mini" style="max-width:32ch;line-height:1.5">Tienda de descubrimiento de tecnología, hogar y accesorios. Deslizá, descubrí, comprá.</p>
+        ${socialLinksHTML()}
       </div>
       <div><h4>Tienda</h4>
         <a href="#/productos">Productos</a><a href="#/">Para ti</a><a href="#/vivo">En vivo</a>
@@ -619,7 +631,7 @@ function renderSuggestedStrip(){
     if(topCat && p.category===topCat) why = `Por ${topCat}`;
     else if(hasPriceData && priceFit(p.price, prefs) > 0.75) why = 'En tu rango de precio';
     else if(!prefs.seen[p.id]) why = 'Nuevo para vos';
-    return `<a class="sugg-card" href="#/producto-${p.id}" onclick="event.preventDefault(); addToCart(state.products.find(x=>x.id==='${p.id}'))">
+    return `<a class="sugg-card" href="#" onclick="event.preventDefault(); openProductDetail('${p.id}')">
       <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
       <div class="why">${why}</div>
       <div class="title">${p.title}</div>
@@ -630,16 +642,79 @@ function renderSuggestedStrip(){
 /* ---------- 12. Producto card ---------- */
 function productCardHTML(p){
   return `
-  <div class="card-prod">
+  <div class="card-prod" onclick="openProductDetail('${p.id}')" style="cursor:pointer">
     <div class="match-badge">${p.match_score||70}%</div>
     <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
     <div class="body">
       <div class="cat">${p.category}</div>
       <div class="title">${p.title}</div>
       <div class="price-row"><span class="price">${fmtMoney(p.price)}</span>${p.original_price>p.price?`<span class="price-orig">${fmtMoney(p.original_price)}</span>`:''}</div>
-      <button class="btn btn-primary btn-sm add-btn" onclick='addToCart(state.products.find(x=>x.id==="${p.id}"))'><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Agregar</button>
+      <button class="btn btn-primary btn-sm add-btn" onclick='event.stopPropagation(); addToCart(state.products.find(x=>x.id==="${p.id}"))'><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Agregar</button>
     </div>
   </div>`;
+}
+
+/* ---------- 12b. Detalle de producto (modal expandido) ---------- */
+let productDetail = null;
+function openProductDetail(id){
+  const p = state.products.find(x=>x.id===id);
+  if(!p) return;
+  productDetail = { product: p, qty: 1 };
+  renderProductDetailModal();
+}
+function closeProductDetail(){
+  productDetail = null;
+  const el = $('#product-detail-backdrop');
+  if(el) el.remove();
+}
+function changeDetailQty(delta){
+  if(!productDetail) return;
+  productDetail.qty = Math.max(1, productDetail.qty + delta);
+  const el = $('#pd-qty-val');
+  if(el) el.textContent = productDetail.qty;
+}
+function addDetailToCart(){
+  if(!productDetail) return;
+  addToCart(productDetail.product, productDetail.qty);
+  closeProductDetail();
+}
+function renderProductDetailModal(){
+  closeProductDetail_silent();
+  if(!productDetail) return;
+  const p = productDetail.product;
+  const wrap = document.createElement('div');
+  wrap.id = 'product-detail-backdrop';
+  wrap.className = 'modal-backdrop pd-backdrop';
+  wrap.onclick = (e)=>{ if(e.target===wrap) closeProductDetail(); };
+  wrap.innerHTML = `
+    <div class="pd-modal">
+      <button class="icon-btn pd-close" onclick="closeProductDetail()"><i data-lucide="x" class="icon"></i></button>
+      <div class="pd-media">
+        <img src="${p.image_url}" alt="${p.title}">
+        <div class="glass-pill glass-pill-cat" style="position:absolute;top:14px;left:14px">${p.category}</div>
+        <div class="glass-pill glass-pill-match" style="position:absolute;top:14px;right:14px">${p.match_score||70}% match</div>
+      </div>
+      <div class="pd-body">
+        ${p.brand?`<div class="mini" style="font-weight:700;text-transform:uppercase;letter-spacing:.03em">${p.brand}</div>`:''}
+        <h2 class="pd-title">${p.title}</h2>
+        <div class="price-row" style="margin:8px 0 18px">
+          <span class="price" style="font-size:22px">${fmtMoney(p.price)}</span>
+          ${p.original_price>p.price?`<span class="price-orig">${fmtMoney(p.original_price)}</span>`:''}
+        </div>
+        <div class="qty-row" style="margin-bottom:18px">
+          <button class="qty-btn" onclick="changeDetailQty(-1)">−</button>
+          <span class="qty-val" id="pd-qty-val">${productDetail.qty}</span>
+          <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="addDetailToCart()"><i data-lucide="shopping-cart" class="icon" style="width:16px;height:16px"></i>Agregar al carrito</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+  icons();
+}
+function closeProductDetail_silent(){
+  const el = $('#product-detail-backdrop');
+  if(el) el.remove();
 }
 
 /* ---------- 13. Vista: Productos ---------- */
@@ -1234,6 +1309,13 @@ function adminStore(){
       <div class="field"><label>URL</label><input id="lv-url" value="${s.live_url}"></div>
     </div>
   </div>
+  <div class="admin-card">
+    <h3>Redes sociales</h3>
+    <p class="mini" style="margin-top:-6px;margin-bottom:14px">Dejá el campo vacío para que ese ícono no aparezca en el pie de página.</p>
+    <div class="field"><label>Instagram (URL completa)</label><input id="sc-instagram" value="${s.instagram_url||''}" placeholder="https://instagram.com/tu_cuenta"></div>
+    <div class="field"><label>Facebook (URL completa)</label><input id="sc-facebook" value="${s.facebook_url||''}" placeholder="https://facebook.com/tu_pagina"></div>
+    <div class="field"><label>TikTok (URL completa)</label><input id="sc-tiktok" value="${s.tiktok_url||''}" placeholder="https://tiktok.com/@tu_cuenta"></div>
+  </div>
   <button class="btn btn-primary" onclick="saveStore()">Guardar cambios</button>`;
 }
 async function saveStore(){
@@ -1241,7 +1323,8 @@ async function saveStore(){
     brand_name: $('#st-name').value, brand_tagline: $('#st-tag').value,
     whatsapp: $('#st-wa').value, email: $('#st-email').value, currency: $('#st-currency').value,
     live_active: $('#lv-active').classList.contains('on'), live_title: $('#lv-title').value,
-    live_when: $('#lv-when').value, live_url: $('#lv-url').value
+    live_when: $('#lv-when').value, live_url: $('#lv-url').value,
+    instagram_url: $('#sc-instagram').value, facebook_url: $('#sc-facebook').value, tiktok_url: $('#sc-tiktok').value
   });
   toast('Tienda actualizada');
 }
