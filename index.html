@@ -468,7 +468,7 @@ function viewHome(){
   `;
 }
 
-/* ---------- 11. Feed swipe ---------- */
+/* ---------- 11. Feed swipe / carrusel ---------- */
 let feedState = { items: [], index: 0 };
 function feedHTML(){
   feedState.items = buildFeed();
@@ -487,37 +487,89 @@ function feedHTML(){
   <div class="suggested-strip" id="suggested-strip"></div>
   `;
 }
+// Monta el carrusel desde cero (primera carga, o cuando se reinician las sugerencias)
 function renderFeedStage(){
   const stage = $('#feed-stage');
   if(!stage) return;
   stage.innerHTML='';
-  const items = feedState.items.slice(feedState.index, feedState.index+2);
-  if(!items.length){ stage.innerHTML = `<div class="feed-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);border-radius:24px">Reiniciando sugerencias...</div>`; icons(); setTimeout(()=>{feedState.index=0; renderFeedStage();},900); return; }
-  items.slice().reverse().forEach((p,i)=>{
-    const isTop = (i===items.length-1);
-    const card = document.createElement('div');
-    card.className='swipe-card';
-    card.style.transform = isTop ? 'none' : 'scale(.93) translateY(14px) rotateX(4deg)';
-    card.style.filter = isTop ? 'none' : 'brightness(.85) saturate(.9)';
-    card.style.zIndex = isTop? 2:1;
-    card.dataset.id = p.id;
-    card.innerHTML = `
-      <div class="swipe-stamp like">ME GUSTA</div>
-      <div class="swipe-stamp skip">PASO</div>
-      <div class="glass-media"><img src="${p.image_url}" alt="${p.title}"></div>
-      <div class="glass-sheen"></div>
-      <div class="glass-pill glass-pill-cat">${p.category}</div>
-      <div class="glass-pill glass-pill-match">${p.match_score||70}% match</div>
-      <div class="glass-info">
-        <div class="title">${p.title}</div>
-        <div class="price">${fmtMoney(p.price)}</div>
-      </div>
-    `;
-    stage.appendChild(card);
-    if(isTop) attachDrag(card, p);
-  });
+  const current = feedState.items[feedState.index];
+  if(!current){ stage.innerHTML = `<div class="feed-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);border-radius:24px">Reiniciando sugerencias...</div>`; icons(); setTimeout(()=>{feedState.index=0; renderFeedStage();},900); return; }
+  const prev = feedState.index>0 ? feedState.items[feedState.index-1] : null;
+  const next = feedState.items[feedState.index+1] || null;
+
+  if(prev) stage.appendChild(buildCarouselCard(prev, 'carousel-left'));
+  const centerCard = buildCarouselCard(current, 'carousel-center');
+  stage.appendChild(centerCard);
+  if(next) stage.appendChild(buildCarouselCard(next, 'carousel-right'));
+
+  attachDrag(centerCard, current);
   renderSuggestedStrip();
   icons();
+}
+function buildCarouselCard(p, extraClass){
+  const card = document.createElement('div');
+  card.className = 'swipe-card ' + extraClass;
+  card.dataset.id = p.id;
+  card.innerHTML = `
+    <div class="swipe-stamp like">ME GUSTA</div>
+    <div class="swipe-stamp skip">PASO</div>
+    <div class="glass-media"><img src="${p.image_url}" alt="${p.title}"></div>
+    <div class="glass-sheen"></div>
+    <div class="glass-pill glass-pill-cat">${p.category}</div>
+    <div class="glass-pill glass-pill-match">${p.match_score||70}% match</div>
+    <div class="glass-info">
+      <div class="title">${p.title}</div>
+      <div class="price">${fmtMoney(p.price)}</div>
+    </div>
+  `;
+  return card;
+}
+// Avanza el carrusel una posición: la tarjeta central pasa a la izquierda (ya decidida),
+// la de la derecha pasa al centro, y entra una nueva tarjeta por la derecha.
+function advanceCarousel(type){
+  const stage = $('#feed-stage');
+  const current = feedState.items[feedState.index];
+  if(!stage || !current) return;
+  recordSignal(current, type);
+
+  const oldLeft = stage.querySelector('.carousel-left');
+  const oldCenter = stage.querySelector('.carousel-center');
+  const oldRight = stage.querySelector('.carousel-right');
+
+  // La tarjeta vieja de la izquierda (ya decidida hace un paso) termina de salir de escena
+  if(oldLeft){
+    oldLeft.classList.remove('carousel-left');
+    oldLeft.classList.add('carousel-exit-left');
+    setTimeout(()=>oldLeft.remove(), 420);
+  }
+  // La central (recién decidida) pasa a ocupar el lugar de la izquierda
+  if(oldCenter){
+    oldCenter.classList.remove('carousel-center');
+    oldCenter.classList.add('carousel-left');
+    oldCenter.style.transform = '';
+    oldCenter.style.left = '';
+    oldCenter.style.transition = '';
+    oldCenter.style.pointerEvents = 'none';
+  }
+  // La de la derecha pasa a ser la nueva protagonista
+  if(oldRight){
+    oldRight.classList.remove('carousel-right');
+    oldRight.classList.add('carousel-center');
+    attachDrag(oldRight, feedState.items[feedState.index+1]);
+  }
+
+  feedState.index++;
+  const newNext = feedState.items[feedState.index+1];
+  if(newNext){
+    const newCard = buildCarouselCard(newNext, 'carousel-right carousel-enter');
+    stage.appendChild(newCard);
+    requestAnimationFrame(()=>{ newCard.classList.remove('carousel-enter'); });
+  }
+
+  if(!feedState.items[feedState.index]){
+    setTimeout(()=>{ feedState.index=0; renderFeedStage(); }, 450);
+  }
+  renderSuggestedStrip();
 }
 function attachDrag(card, product){
   let startX=0, startY=0, dx=0, dragging=false;
@@ -528,15 +580,16 @@ function attachDrag(card, product){
     if(!dragging) return;
     dx = x-startX;
     const rot = dx/18;
-    card.style.transform = `translate(${dx}px, ${(y-startY)*.15}px) rotate(${rot}deg)`;
+    card.style.transform = `translateX(-50%) translate(${dx}px, ${(y-startY)*.15}px) rotate(${rot}deg)`;
     likeStamp.style.opacity = Math.min(Math.max(-dx/80,0),1);
     skipStamp.style.opacity = Math.min(Math.max(dx/80,0),1);
   }
   function onUp(){
-    if(!dragging) return; dragging=false; card.style.cursor='grab'; card.style.transition='transform .25s ease, opacity .25s ease';
-    if(dx<-110){ finishSwipe(card, product, 'like'); }
-    else if(dx>110){ finishSwipe(card, product, 'skip'); }
-    else { card.style.transform='none'; likeStamp.style.opacity=0; skipStamp.style.opacity=0; }
+    if(!dragging) return; dragging=false; card.style.cursor='grab';
+    card.style.transition='transform .4s cubic-bezier(.22,1,.36,1), left .4s cubic-bezier(.22,1,.36,1), opacity .4s ease';
+    if(dx<-110){ advanceCarousel('like'); }
+    else if(dx>110){ advanceCarousel('skip'); }
+    else { card.style.transform=''; likeStamp.style.opacity=0; skipStamp.style.opacity=0; }
     dx=0;
   }
   card.addEventListener('mousedown', e=>onDown(e.clientX,e.clientY));
@@ -546,21 +599,11 @@ function attachDrag(card, product){
   card.addEventListener('touchmove', e=>{const t=e.touches[0]; onMove(t.clientX,t.clientY);}, {passive:true});
   card.addEventListener('touchend', onUp);
 }
-function finishSwipe(card, product, type){
-  const dir = type==='like'?1:-1;
-  card.style.transform = `translate(${dir*500}px, -40px) rotate(${dir*30}deg)`;
-  card.style.opacity='0';
-  recordSignal(product, type);
-  feedState.index++;
-  setTimeout(renderFeedStage, 200);
-}
 function feedAction(type){
   const p = feedState.items[feedState.index];
   if(!p) return;
   if(type==='cart') addToCart(p,1);
-  const card = $(`#feed-stage .swipe-card[data-id="${p.id}"]`);
-  if(card) finishSwipe(card, p, type==='cart'?'like':type);
-  else { recordSignal(p, type==='cart'?'like':type); feedState.index++; renderFeedStage(); }
+  advanceCarousel(type==='cart' ? 'like' : type);
 }
 function renderSuggestedStrip(){
   const strip = $('#suggested-strip');

@@ -133,14 +133,22 @@ section.block{margin-bottom:32px;width:100%}
 
 /* ---------- Feed swipe ---------- */
 .feed-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
-.feed-stage{position:relative;width:100%;max-width:340px;height:min(400px, 58vh, 58dvh);perspective:1000px}
+.feed-stage{position:relative;width:100%;max-width:340px;height:min(400px, 58vh, 58dvh);perspective:1200px}
 .swipe-card{
-  position:absolute;inset:0;background:#0f1218;border-radius:var(--r-lg);
-  overflow:hidden;user-select:none;touch-action:pan-y;cursor:grab;
+  position:absolute;top:0;left:50%;width:78%;height:100%;
+  background:#0f1218;border-radius:var(--r-lg);
+  overflow:hidden;user-select:none;
   border:1px solid rgba(255,255,255,.35);
   box-shadow:0 1px 1px rgba(255,255,255,.5) inset, 0 -1px 8px rgba(255,255,255,.15) inset, 0 20px 40px -14px rgba(15,18,24,.45);
-  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  transition:transform .4s cubic-bezier(.22,1,.36,1), opacity .4s ease, filter .4s ease, left .4s cubic-bezier(.22,1,.36,1);
+  transform:translateX(-50%);
 }
+.carousel-center{left:50%;transform:translateX(-50%) scale(1) rotateY(0deg);z-index:5;opacity:1;filter:none;cursor:grab;touch-action:pan-y}
+.carousel-left{left:10%;transform:translateX(-50%) scale(.8) rotateY(24deg);z-index:3;opacity:.6;filter:brightness(.78) saturate(.9);pointer-events:none}
+.carousel-right{left:90%;transform:translateX(-50%) scale(.8) rotateY(-24deg);z-index:3;opacity:.6;filter:brightness(.78) saturate(.9);pointer-events:none}
+.carousel-exit-left{left:-24%;transform:translateX(-50%) scale(.68) rotateY(30deg);opacity:0}
+.carousel-exit-right{left:124%;transform:translateX(-50%) scale(.68) rotateY(-30deg);opacity:0}
+.carousel-enter{opacity:0}
 .glass-media{position:absolute;inset:0}
 .glass-media img{width:100%;height:100%;object-fit:cover;pointer-events:none}
 /* Brillo diagonal tipo "vidrio líquido" */
