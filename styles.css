@@ -133,22 +133,54 @@ section.block{margin-bottom:32px;width:100%}
 
 /* ---------- Feed swipe ---------- */
 .feed-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
-.feed-stage{position:relative;width:100%;max-width:340px;height:min(400px, 58vh, 58dvh)}
-.swipe-card{position:absolute;inset:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;user-select:none;touch-action:pan-y;cursor:grab}
-.swipe-card .imgwrap{flex:1;background:var(--soft);overflow:hidden}
-.swipe-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.swipe-card .info{padding:14px 16px 16px}
-.swipe-card .cat{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
-.swipe-card .title{font-weight:800;font-size:16px;margin:2px 0 6px}
-.swipe-card .price{font-size:17px;font-weight:800;color:var(--brand-dark)}
-.swipe-stamp{position:absolute;top:20px;padding:6px 14px;border:3px solid;border-radius:8px;font-weight:900;font-size:18px;letter-spacing:.05em;opacity:0;transform:rotate(-14deg)}
+.feed-stage{position:relative;width:100%;max-width:340px;height:min(400px, 58vh, 58dvh);perspective:1000px}
+.swipe-card{
+  position:absolute;inset:0;background:#0f1218;border-radius:var(--r-lg);
+  overflow:hidden;user-select:none;touch-action:pan-y;cursor:grab;
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:0 1px 1px rgba(255,255,255,.5) inset, 0 -1px 8px rgba(255,255,255,.15) inset, 0 20px 40px -14px rgba(15,18,24,.45);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.glass-media{position:absolute;inset:0}
+.glass-media img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* Brillo diagonal tipo "vidrio líquido" */
+.glass-sheen{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 68%, rgba(255,255,255,.16) 100%);
+  mix-blend-mode:overlay;
+}
+.glass-pill{
+  position:absolute;top:14px;z-index:3;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,.7);
+  color:var(--text);font-size:11px;font-weight:800;letter-spacing:.02em;
+  padding:6px 12px;border-radius:999px;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset, 0 4px 12px rgba(15,18,24,.18);
+}
+.glass-pill-cat{left:14px;text-transform:uppercase}
+.glass-pill-match{right:14px}
+.glass-info{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;padding:16px;padding-top:34px;
+  background:linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.42) 55%, rgba(0,0,0,0) 100%);
+}
+.glass-info .title{font-weight:800;font-size:16px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.4);margin:0 0 4px}
+.glass-info .price{font-size:17px;font-weight:800;color:#fff}
+.swipe-stamp{position:absolute;top:20px;z-index:4;padding:6px 14px;border:3px solid;border-radius:8px;font-weight:900;font-size:18px;letter-spacing:.05em;opacity:0;transform:rotate(-14deg)}
 .swipe-stamp.like{left:18px;color:var(--brand-dark);border-color:var(--brand-dark)}
 .swipe-stamp.skip{right:18px;color:#c0362c;border-color:#c0362c;transform:rotate(14deg)}
 .feed-actions{display:flex;align-items:center;gap:14px}
-.round-btn{width:52px;height:52px;border-radius:50%;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.round-btn{
+  width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset, 0 8px 20px -6px rgba(15,18,24,.25);
+  transition:transform .15s ease;
+}
+.round-btn:active{transform:scale(.92)}
 .round-btn.skip{color:#c0362c}
 .round-btn.like{color:var(--brand-dark)}
-.round-btn.add{width:60px;height:60px;background:var(--brand);color:#fff;border:none}
+.round-btn.add{width:60px;height:60px;background:rgba(107,143,53,.85);color:#fff;border:1px solid rgba(255,255,255,.5)}
 .feed-empty{text-align:center;color:var(--muted);font-size:13px;padding:40px 20px}
 
 .suggested-strip{display:flex;gap:14px;overflow-x:auto;padding-bottom:6px;width:100%;-webkit-overflow-scrolling:touch}

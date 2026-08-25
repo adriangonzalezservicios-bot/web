@@ -497,19 +497,21 @@ function renderFeedStage(){
     const isTop = (i===items.length-1);
     const card = document.createElement('div');
     card.className='swipe-card';
-    card.style.transform = isTop ? 'none' : 'scale(.94) translateY(10px)';
+    card.style.transform = isTop ? 'none' : 'scale(.93) translateY(14px) rotateX(4deg)';
+    card.style.filter = isTop ? 'none' : 'brightness(.85) saturate(.9)';
     card.style.zIndex = isTop? 2:1;
     card.dataset.id = p.id;
     card.innerHTML = `
       <div class="swipe-stamp like">ME GUSTA</div>
       <div class="swipe-stamp skip">PASO</div>
-      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}"></div>
-      <div class="info">
-        <div class="cat">${p.category}</div>
+      <div class="glass-media"><img src="${p.image_url}" alt="${p.title}"></div>
+      <div class="glass-sheen"></div>
+      <div class="glass-pill glass-pill-cat">${p.category}</div>
+      <div class="glass-pill glass-pill-match">${p.match_score||70}% match</div>
+      <div class="glass-info">
         <div class="title">${p.title}</div>
         <div class="price">${fmtMoney(p.price)}</div>
       </div>
-      <div class="match-badge" style="top:14px;right:14px">${p.match_score||70}% match</div>
     `;
     stage.appendChild(card);
     if(isTop) attachDrag(card, p);
