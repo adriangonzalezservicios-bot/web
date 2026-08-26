@@ -461,17 +461,23 @@ function viewHome(){
     </div>
   </section>
 
-  <section class="block" id="feed-section">
+  <div class="marquee">
+    <div class="marquee-track">
+      ${marqueeItemsHTML()}${marqueeItemsHTML()}
+    </div>
+  </div>
+
+  <section class="block reveal" id="feed-section">
     <div class="section-head"><h2>Para ti</h2><span class="mini">Deslizá para descubrir</span></div>
     ${feedHTML()}
   </section>
 
-  <section class="block">
+  <section class="block reveal">
     <div class="section-head"><h2>Destacados</h2><a href="#/productos">Ver todo <i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i></a></div>
-    <div class="grid-products">${destacados.map(productCardHTML).join('')}</div>
+    <div class="grid-products">${destacados.map((p,i)=>`<div class="reveal" style="transition-delay:${Math.min(i,6)*70}ms">${productCardHTML(p)}</div>`).join('')}</div>
   </section>
 
-  <section class="block">
+  <section class="block reveal">
     <div class="seo-text">
       <h2>Tecnología, hogar y accesorios que se adaptan a vos</h2>
       <p>${s.brand_name} ${s.brand_tagline} es una tienda online pensada para que descubras productos de <strong>tecnología</strong>, <strong>hogar</strong> y <strong>accesorios</strong> sin perder tiempo filtrando catálogos interminables. Deslizá en nuestro feed «Para ti», indicá qué te gusta y qué no, y dejá que el sistema arme sugerencias cada vez más precisas para tu categoría, marca y rango de precio favoritos.</p>
@@ -482,6 +488,16 @@ function viewHome(){
   </section>
   `;
 }
+function marqueeItemsHTML(){
+  const items = [
+    { icon:'sparkles', text:'Productos nuevos cada semana' },
+    { icon:'credit-card', text:'Hasta 12 cuotas con Mercado Pago' },
+    { icon:'truck', text:'Envío a todo el país' },
+    { icon:'store', text:'Retiro en tienda sin cargo' },
+    { icon:'heart', text:'El feed aprende lo que te gusta' },
+  ];
+  return items.map(i=>`<span class="marquee-item"><i data-lucide="${i.icon}" class="icon" style="width:15px;height:15px"></i>${i.text}</span>`).join('');
+}
 
 /* ---------- 11. Feed swipe / carrusel ---------- */
 let feedState = { items: [], index: 0 };
@@ -491,7 +507,10 @@ function feedHTML(){
   feedState.index = 0;
   return `
   <div class="feed-wrap">
-    <div class="feed-stage" id="feed-stage"></div>
+    <div class="feed-stage-wrap">
+      <div class="feed-stage" id="feed-stage"></div>
+      <div class="swipe-hint" id="swipe-hint"><i data-lucide="move-horizontal" class="icon"></i>Deslizá para decidir</div>
+    </div>
     <div class="feed-actions">
       <button class="round-btn skip" onclick="feedAction('skip')" title="Saltar"><i data-lucide="x" class="icon"></i></button>
       <button class="round-btn like" onclick="feedAction('like')" title="Me gusta"><i data-lucide="heart" class="icon"></i></button>
@@ -590,7 +609,7 @@ function attachDrag(card, product){
   let startX=0, startY=0, dx=0, dragging=false;
   const likeStamp = card.querySelector('.swipe-stamp.like');
   const skipStamp = card.querySelector('.swipe-stamp.skip');
-  function onDown(x,y){ dragging=true; startX=x; startY=y; card.style.transition='none'; card.style.cursor='grabbing'; }
+  function onDown(x,y){ dragging=true; startX=x; startY=y; card.style.transition='none'; card.style.cursor='grabbing'; dismissSwipeHint(); }
   function onMove(x,y){
     if(!dragging) return;
     dx = x-startX;
@@ -617,6 +636,7 @@ function attachDrag(card, product){
 function feedAction(type){
   const p = feedState.items[feedState.index];
   if(!p) return;
+  dismissSwipeHint();
   if(type==='cart') addToCart(p,1);
   advanceCarousel(type==='cart' ? 'like' : type);
 }
@@ -1358,8 +1378,26 @@ function render(){
   const route = state.route.split('?')[0];
   document.getElementById('app').innerHTML = shellHTML(currentView());
   icons();
-  if(route==='#/' || route==='') { renderFeedStage(); }
+  if(route==='#/' || route==='') { renderFeedStage(); initScrollReveal(); }
   if(route==='#/checkout') syncCheckoutInputs();
+}
+function initScrollReveal(){
+  const els = $$('.reveal');
+  if(!els.length) return;
+  if(!('IntersectionObserver' in window)){ els.forEach(el=>el.classList.add('is-visible')); return; }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el=>io.observe(el));
+}
+function dismissSwipeHint(){
+  const hint = $('#swipe-hint');
+  if(hint) hint.remove();
 }
 
 /* ---------- 21. Init ---------- */
