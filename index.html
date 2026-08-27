@@ -98,7 +98,7 @@ const DEMO_PRODUCTS = [
 ];
 const DEFAULT_SETTINGS = {
   brand_name:'AKARI', brand_tagline:'electro & home',
-  color_brand:'#6b8f35', color_bg:'#f6f7f9', color_text:'#0f1218', logo_url:'',
+  color_brand:'#6b8f35', color_bg:'#f6f7f9', color_text:'#0f1218', logo_url:'', banner_url:'',
   hero_title:'Descubrí productos que sí te van a gustar',
   hero_text:'Deslizá tecnología, hogar y accesorios como en tu red favorita. AKARI aprende de cada Me gusta para mostrarte más de lo que buscás — y menos de lo que no.',
   pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
@@ -466,14 +466,25 @@ function footerHTML(){
 }
 
 /* ---------- 10. Vista: Inicio ---------- */
+const VIDEO_EXTENSIONS = ['mp4','webm','mov','ogg','ogv'];
+function bannerMediaHTML(){
+  const url = state.settings.banner_url;
+  if(!url){
+    // Sin banner personalizado: usar la imagen por defecto del proyecto
+    return `<img src="./banner-image.jpg" alt="Bienvenido a AKARI Electro & Home" loading="eager">`;
+  }
+  const ext = (url.split('?')[0].split('.').pop() || '').toLowerCase();
+  if(VIDEO_EXTENSIONS.includes(ext)){
+    return `<video autoplay muted loop playsinline preload="auto"><source src="${url}"></video>`;
+  }
+  return `<img src="${url}" alt="Bienvenido a AKARI Electro & Home" loading="eager">`;
+}
 function viewHome(){
   const s = state.settings;
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
   <section class="video-banner">
-    <div class="video-frame">
-      <img src="./banner-image.jpg" alt="Bienvenido a AKARI Electro & Home" loading="eager">
-    </div>
+    <div class="video-frame">${bannerMediaHTML()}</div>
   </section>
 
   <div class="marquee">
@@ -1248,12 +1259,75 @@ function adminDesign(){
     <div class="field"><label>URL del logo</label><input id="ds-logo" value="${s.logo_url}"></div>
   </div>
   <div class="admin-card">
+    <h3>Banner de inicio</h3>
+    <p class="mini" style="margin-top:-6px;margin-bottom:14px">Puede ser una imagen (jpg, png, webp, gif) o un video (mp4, webm). Se detecta solo según el archivo que subas.</p>
+    <div id="banner-preview" style="width:100%;aspect-ratio:16/6;border-radius:var(--r-sm);background:var(--soft);border:1px solid var(--border);overflow:hidden;margin-bottom:10px;display:flex;align-items:center;justify-content:center">
+      ${s.banner_url ? bannerPreviewInner(s.banner_url) : `<img src="./banner-image.jpg" style="width:100%;height:100%;object-fit:cover">`}
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <label class="btn btn-outline btn-sm" style="cursor:pointer">
+        <i data-lucide="upload" class="icon" style="width:14px;height:14px"></i>Examinar...
+        <input type="file" id="banner-file" accept="image/*,video/*" style="display:none" onchange="handleBannerUpload(this)">
+      </label>
+      ${s.banner_url ? `<button class="btn btn-outline btn-sm" onclick="resetBanner()"><i data-lucide="rotate-ccw" class="icon" style="width:14px;height:14px"></i>Usar el original</button>` : ''}
+      <span id="banner-upload-status" class="mini"></span>
+    </div>
+  </div>
+  <div class="admin-card">
     <h3>Hero (Inicio)</h3>
     <div class="field"><label>Título</label><input id="ds-hero-title" value="${s.hero_title}"></div>
     <div class="field"><label>Texto</label><textarea id="ds-hero-text" rows="3">${s.hero_text}</textarea></div>
   </div>
   <button class="btn btn-primary" onclick="saveDesign()">Guardar cambios</button>
   `;
+}
+function bannerPreviewInner(url){
+  const ext = (url.split('?')[0].split('.').pop() || '').toLowerCase();
+  if(VIDEO_EXTENSIONS.includes(ext)) return `<video src="${url}" style="width:100%;height:100%;object-fit:cover" muted autoplay loop playsinline></video>`;
+  return `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
+}
+async function handleBannerUpload(inputEl){
+  const file = inputEl.files?.[0];
+  if(!file) return;
+  const isImage = file.type.startsWith('image/');
+  const isVideo = file.type.startsWith('video/');
+  if(!isImage && !isVideo){ toast('Elegí una imagen o un video'); return; }
+  if(file.size > 25*1024*1024){ toast('El archivo no puede pesar más de 25MB'); return; }
+  const status = $('#banner-upload-status');
+
+  if(!HAS_SUPABASE || !state.session){
+    const reader = new FileReader();
+    reader.onload = () => {
+      $('#banner-preview').innerHTML = isVideo
+        ? `<video src="${reader.result}" style="width:100%;height:100%;object-fit:cover" muted autoplay loop playsinline></video>`
+        : `<img src="${reader.result}" style="width:100%;height:100%;object-fit:cover">`;
+      if(status) status.textContent = 'Vista previa local (sin Supabase, no se guarda en la nube).';
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  if(status) status.textContent = 'Subiendo...';
+  try{
+    const ext = (file.name.split('.').pop() || (isVideo?'mp4':'jpg')).toLowerCase().replace(/[^a-z0-9]/g,'') || (isVideo?'mp4':'jpg');
+    const path = `banner-${Date.now()}-${uid()}.${ext}`;
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/site-assets/${path}`, {
+      method:'POST',
+      headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':`Bearer ${state.session.access_token}`, 'Content-Type':file.type },
+      body:file
+    });
+    if(!res.ok){ const t = await res.text().catch(()=>''); throw new Error(t || res.statusText); }
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/site-assets/${path}`;
+    await patchSettings({ banner_url: publicUrl });
+    if(status) status.textContent = 'Banner actualizado ✔';
+  }catch(e){
+    if(status) status.textContent = 'Error al subir: ' + e.message;
+    toast('No se pudo subir el banner');
+  }
+}
+async function resetBanner(){
+  await patchSettings({ banner_url: '' });
+  toast('Banner restaurado al original');
 }
 async function saveDesign(){
   const patch = {

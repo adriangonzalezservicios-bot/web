@@ -47,7 +47,8 @@ create table if not exists public.site_settings (
   live_url text default '',
   instagram_url text default '',
   facebook_url text default '',
-  tiktok_url text default ''
+  tiktok_url text default '',
+  banner_url text default ''
 );
 
 insert into public.site_settings (id) values (1)
