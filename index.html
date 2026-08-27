@@ -178,12 +178,21 @@ function decayedValue(entry){ if(!entry) return 0; return entry.score * decayFac
 
 function loadPrefs(){
   const p = lsGet(PREFS_KEY, null);
-  if(p && p.version===3) return p;
+  if(p && p.version===3){
+    // Migración: totalSignals pasaba de ser un contador plano a una entrada
+    // con decaimiento por tiempo (igual que categorías/marcas). Convertimos
+    // una sola vez, preservando la confianza ya ganada como punto de partida.
+    if(typeof p.totalSignals === 'number'){
+      p.totalSignals = p.totalSignals ? { score: p.totalSignals, ts: now_() } : null;
+      savePrefs(p);
+    }
+    return p;
+  }
   // Migración simple desde v2 si existía, para no perder progreso del usuario
   const old = lsGet('akari_prefs_v2', null);
   const fresh = {
     version:3, categories:{}, brands:{}, priceMean:0, priceM2:0, priceCount:0,
-    seen:{}, skipped:{}, session:[], totalSignals:0, createdAt: now_()
+    seen:{}, skipped:{}, session:[], totalSignals:null, createdAt: now_()
   };
   if(old){
     const ts = now_();
@@ -198,6 +207,14 @@ function loadPrefs(){
   return fresh;
 }
 function savePrefs(p){ lsSet(PREFS_KEY, p); }
+
+// Confianza en lo que sabemos del usuario, con decaimiento por tiempo (igual
+// que las afinidades): si no interactúa por un tiempo, "olvidamos" cuánto lo
+// conocíamos y el feed vuelve a explorar más, en vez de quedar congelado en
+// el piso mínimo de exploración para siempre.
+function getConfidence(prefs){
+  return Math.min(1, decayedValue(prefs.totalSignals) / 25);
+}
 
 // Welford incremental: media y varianza de precios que le gustaron, sin guardar historial completo
 function updatePriceStats(prefs, price){
@@ -222,7 +239,7 @@ function recordSignal(product, type){
     const brandEntry = prefs.brands[product.brand];
     prefs.brands[product.brand] = { score: decayedValue(brandEntry) + weight, ts };
     if(weight > 0) updatePriceStats(prefs, product.price);
-    prefs.totalSignals += 1;
+    prefs.totalSignals = { score: decayedValue(prefs.totalSignals) + 1, ts };
   }
   if(type==='skip'){
     const s = prefs.skipped[product.id];
@@ -270,7 +287,7 @@ function scoreProduct(product, prefs, opts={}){
   if(sessionSet.has(product.id)) score -= 0.5;                 // evitar repetir en la misma sesión de scroll
 
   // exploración: más ruido cuando conocemos poco al usuario, casi nada cuando ya aprendimos de él
-  const confidence = Math.min(1, prefs.totalSignals / 25);
+  const confidence = getConfidence(prefs);
   const noiseAmplitude = 0.14 * (1 - confidence) + 0.02;
   score += (Math.random()*2-1) * noiseAmplitude;
 
@@ -293,7 +310,7 @@ function buildFeed(){
     .sort((a,b)=>b.s-a.s);
 
   // exploración adaptativa: epsilon baja de ~25% (usuario nuevo) a un piso de 6% (usuario ya conocido)
-  const confidence = Math.min(1, prefs.totalSignals / 25);
+  const confidence = getConfidence(prefs);
   const epsilon = 0.25 - confidence*0.19;
   let ordered = [];
   const rest = [...scored];

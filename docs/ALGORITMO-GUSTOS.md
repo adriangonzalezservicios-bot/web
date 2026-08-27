@@ -68,6 +68,16 @@ que el sistema aprende de él:
 | 10 | 17% |
 | 25 o más | 6% (piso mínimo, nunca deja de explorar del todo) |
 
+**La confianza también se olvida con el tiempo.** El contador de
+señales que determina esta confianza (`totalSignals`) no es un simple
+número que solo sube — es una entrada con la misma vida media de 21
+días que las afinidades de categoría/marca. Si alguien interactuó
+mucho y después no volvió por dos o tres meses, su nivel de "usuario
+conocido" decae junto con sus gustos: el feed vuelve a explorar más
+al reencontrarse con esa persona, en vez de quedarse congelado para
+siempre en el piso mínimo del 6% con preferencias ya desactualizadas.
+Antes esto no pasaba: la confianza, una vez ganada, no bajaba nunca.
+
 ## Diversidad — reordenamiento real, no solo "intentar"
 Se recorre la cola ya ordenada y, si insertar el siguiente ítem
 generaría **3 productos seguidos de la misma categoría**, el
