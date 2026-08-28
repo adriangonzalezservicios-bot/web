@@ -154,7 +154,7 @@ section.block{margin-bottom:32px;width:100%}
 .card-prod .imgwrap{aspect-ratio:1/1;background:var(--soft);overflow:hidden}
 .card-prod img{width:100%;height:100%;object-fit:cover}
 .card-prod .body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
-.card-prod .cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;font-weight:700}
+.card-prod .cat,.site-style-card .cat{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;font-weight:700}
 .card-prod .title{font-size:13.5px;font-weight:700;line-height:1.3;min-height:34px}
 .card-prod .price-row{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
 .price{font-weight:800;font-size:15px}
@@ -181,29 +181,16 @@ section.block{margin-bottom:32px;width:100%}
 .carousel-exit-left{left:-24%;transform:translateX(-50%) scale(.68) rotateY(30deg);opacity:0}
 .carousel-exit-right{left:124%;transform:translateX(-50%) scale(.68) rotateY(-30deg);opacity:0}
 .carousel-enter{opacity:0}
-/* ---------- Tarjeta estilo Sticker Kawaii ---------- */
-.swipe-card.sticker-card{
-  background:#fff;border:4px solid #3d2b1f;border-radius:22px;
-  box-shadow:5px 5px 0 rgba(61,43,31,.16), 0 20px 40px -16px rgba(15,18,24,.4);
+/* ---------- Tarjeta del carrusel, acorde al resto del sitio ---------- */
+.swipe-card.site-style-card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);
+  box-shadow:var(--shadow);
   display:flex;flex-direction:column;
 }
-.sticker-media{position:relative;flex:1;min-height:0;background:var(--soft);border-bottom:4px solid #3d2b1f;overflow:hidden}
-.sticker-media img{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.sticker-badge{
-  position:absolute;top:10px;right:10px;z-index:3;background:#fff;border:3px solid #3d2b1f;border-radius:999px;
-  padding:4px 10px;font-size:10.5px;font-weight:900;color:var(--brand-dark);
-  box-shadow:2px 2px 0 rgba(61,43,31,.2);
-}
-.sticker-star{position:absolute;z-index:3;pointer-events:none;filter:drop-shadow(1px 2px 0 rgba(61,43,31,.25))}
-.sticker-star.s1{top:8px;left:10px;font-size:18px;color:#ffd23f}
-.sticker-star.s2{bottom:8px;left:12px;font-size:13px;color:var(--brand);transform:rotate(12deg)}
-.sticker-body{padding:10px 12px 12px;background:#fff}
-.sticker-cat{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:2px}
-.sticker-title{font-weight:800;font-size:13px;line-height:1.25;margin-bottom:8px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.sticker-price{
-  display:inline-block;background:#ffd23f;border:2.5px solid #3d2b1f;border-radius:999px;
-  padding:3px 12px;font-weight:900;font-size:12.5px;color:#3d2b1f;
-}
+.cc-media{flex:1;min-height:0;background:var(--soft);overflow:hidden}
+.cc-media img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.cc-body{padding:12px 14px 14px;background:#fff}
+.cc-title{font-weight:700;font-size:13.5px;line-height:1.3;margin:2px 0 6px;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .swipe-stamp{position:absolute;top:20px;z-index:4;padding:6px 14px;border:3px solid;border-radius:8px;font-weight:900;font-size:18px;letter-spacing:.05em;opacity:0;transform:rotate(-14deg)}
 .swipe-stamp.like{left:18px;color:var(--brand-dark);border-color:var(--brand-dark)}
 .swipe-stamp.skip{right:18px;color:#c0362c;border-color:#c0362c;transform:rotate(14deg)}

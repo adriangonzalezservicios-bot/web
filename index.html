@@ -568,21 +568,17 @@ function renderFeedStage(){
 }
 function buildCarouselCard(p, extraClass){
   const card = document.createElement('div');
-  card.className = 'swipe-card sticker-card ' + extraClass;
+  card.className = 'swipe-card site-style-card ' + extraClass;
   card.dataset.id = p.id;
   card.innerHTML = `
     <div class="swipe-stamp like">ME GUSTA</div>
     <div class="swipe-stamp skip">PASO</div>
-    <div class="sticker-media">
-      <img src="${p.image_url}" alt="${p.title}">
-      <div class="sticker-star s1">✦</div>
-      <div class="sticker-badge">${p.match_score||70}% match</div>
-      <div class="sticker-star s2">★</div>
-    </div>
-    <div class="sticker-body">
-      <div class="sticker-cat">${p.category}</div>
-      <div class="sticker-title">${p.title}</div>
-      <div class="sticker-price">${fmtMoney(p.price)}</div>
+    <div class="match-badge">${p.match_score||70}%</div>
+    <div class="cc-media"><img src="${p.image_url}" alt="${p.title}"></div>
+    <div class="cc-body">
+      <div class="cat">${p.category}</div>
+      <div class="cc-title">${p.title}</div>
+      <div class="price">${fmtMoney(p.price)}</div>
     </div>
   `;
   return card;
