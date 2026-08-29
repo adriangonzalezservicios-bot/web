@@ -18,6 +18,8 @@ create table if not exists public.products (
   image_url text default '',
   sort_order int default 1,
   active boolean default true,
+  track_stock boolean default false,
+  stock integer default 0,
   created_at timestamptz default now()
 );
 

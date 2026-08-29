@@ -65,6 +65,8 @@ const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
 const uid = () => Math.random().toString(36).slice(2,10);
 const lsGet = (k, fallback) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch(e){ return fallback; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+function isOutOfStock(p){ return !!p.track_stock && (Number(p.stock)||0) <= 0; }
+function stockRemaining(p){ return p.track_stock ? Math.max(0, Number(p.stock)||0) : Infinity; }
 function fmtMoney(n){
   const cur = state.settings.currency || 'ARS';
   try {
@@ -298,13 +300,15 @@ function scoreProduct(product, prefs, opts={}){
 function buildFeed(){
   const prefs = loadPrefs();
   const sessionSet = new Set(prefs.session.slice(-12));
+  // no tiene sentido sugerir algo que no se puede comprar
+  const inStock = state.products.filter(p=>!isOutOfStock(p));
   // filtrar productos rechazados con fuerza y recientemente, para no insistir
-  const pool = state.products.filter(p=>{
+  const pool = inStock.filter(p=>{
     const sk = prefs.skipped[p.id];
     if(!sk) return true;
     return !(sk.count>=3 && decayFactor(sk.ts) > 0.6);
   });
-  const finalPool = pool.length ? pool : state.products;
+  const finalPool = pool.length ? pool : inStock;
 
   let scored = finalPool
     .map(p=>({p, s:scoreProduct(p, prefs, {sessionSet})}))
@@ -344,9 +348,15 @@ function buildFeed(){
 /* ---------- 7. Carrito ---------- */
 function saveCart(){ lsSet('akari_cart', state.cart); }
 function addToCart(product, qty=1){
+  if(isOutOfStock(product)){ toast('Ese producto no tiene stock disponible'); return; }
   const existing = state.cart.find(i=>i.id===product.id);
-  if(existing) existing.qty += qty;
-  else state.cart.push({id:product.id, title:product.title, price:product.price, image_url:product.image_url, category:product.category, qty});
+  const currentQty = existing ? existing.qty : 0;
+  const max = stockRemaining(product);
+  const allowedQty = Math.min(qty, Math.max(0, max - currentQty));
+  if(allowedQty <= 0){ toast(`Ya tenés en el carrito todo el stock disponible (${max})`); return; }
+  if(allowedQty < qty) toast(`Solo quedan ${max} unidades — se ajustó la cantidad`);
+  if(existing) existing.qty += allowedQty;
+  else state.cart.push({id:product.id, title:product.title, price:product.price, image_url:product.image_url, category:product.category, qty:allowedQty});
   saveCart();
   recordSignal(product,'cart');
   toast('Agregado al carrito');
@@ -355,6 +365,11 @@ function addToCart(product, qty=1){
 function updateQty(id, delta){
   const item = state.cart.find(i=>i.id===id);
   if(!item) return;
+  if(delta > 0){
+    const product = state.products.find(p=>p.id===id);
+    const max = product ? stockRemaining(product) : Infinity;
+    if(item.qty >= max){ toast(`No hay más stock disponible (máx. ${max})`); return; }
+  }
   item.qty += delta;
   if(item.qty<=0) state.cart = state.cart.filter(i=>i.id!==id);
   saveCart(); render();
@@ -674,7 +689,7 @@ function renderSuggestedStrip(){
     .map(([k,v])=>[k, decayedValue(v)])
     .sort((a,b)=>b[1]-a[1])[0]?.[0];
   const hasPriceData = prefs.priceCount >= 2;
-  const list = [...state.products].sort((a,b)=>scoreProduct(b,prefs)-scoreProduct(a,prefs)).slice(0,10);
+  const list = [...state.products].filter(p=>!isOutOfStock(p)).sort((a,b)=>scoreProduct(b,prefs)-scoreProduct(a,prefs)).slice(0,10);
   strip.innerHTML = list.map(p=>{
     let why = 'Recomendado';
     if(topCat && p.category===topCat) why = `Por ${topCat}`;
@@ -690,15 +705,18 @@ function renderSuggestedStrip(){
 
 /* ---------- 12. Producto card ---------- */
 function productCardHTML(p){
+  const oos = isOutOfStock(p);
   return `
-  <div class="card-prod" onclick="openProductDetail('${p.id}')" style="cursor:pointer">
+  <div class="card-prod ${oos?'card-oos':''}" onclick="openProductDetail('${p.id}')" style="cursor:pointer">
     <div class="match-badge">${p.match_score||70}%</div>
-    <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
+    <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy">${oos?'<div class="oos-overlay">Sin stock</div>':''}</div>
     <div class="body">
       <div class="cat">${p.category}</div>
       <div class="title">${p.title}</div>
       <div class="price-row"><span class="price">${fmtMoney(p.price)}</span>${p.original_price>p.price?`<span class="price-orig">${fmtMoney(p.original_price)}</span>`:''}</div>
-      <button class="btn btn-primary btn-sm add-btn" onclick='event.stopPropagation(); addToCart(state.products.find(x=>x.id==="${p.id}"))'><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Agregar</button>
+      ${oos
+        ? `<button class="btn btn-outline btn-sm add-btn" disabled style="opacity:.55;cursor:not-allowed">Sin stock</button>`
+        : `<button class="btn btn-primary btn-sm add-btn" onclick='event.stopPropagation(); addToCart(state.products.find(x=>x.id==="${p.id}"))'><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Agregar</button>`}
     </div>
   </div>`;
 }
@@ -718,7 +736,10 @@ function closeProductDetail(){
 }
 function changeDetailQty(delta){
   if(!productDetail) return;
-  productDetail.qty = Math.max(1, productDetail.qty + delta);
+  const max = stockRemaining(productDetail.product);
+  const next = productDetail.qty + delta;
+  if(next > max){ toast(`Solo quedan ${max} unidades`); return; }
+  productDetail.qty = Math.max(1, next);
   const el = $('#pd-qty-val');
   if(el) el.textContent = productDetail.qty;
 }
@@ -731,6 +752,8 @@ function renderProductDetailModal(){
   closeProductDetail_silent();
   if(!productDetail) return;
   const p = productDetail.product;
+  const oos = isOutOfStock(p);
+  const lowStock = p.track_stock && !oos && p.stock <= 3;
   const wrap = document.createElement('div');
   wrap.id = 'product-detail-backdrop';
   wrap.className = 'modal-backdrop pd-backdrop';
@@ -739,9 +762,10 @@ function renderProductDetailModal(){
     <div class="pd-modal">
       <button class="icon-btn pd-close" onclick="closeProductDetail()"><i data-lucide="x" class="icon"></i></button>
       <div class="pd-media">
-        <img src="${p.image_url}" alt="${p.title}">
+        <img src="${p.image_url}" alt="${p.title}" style="${oos?'filter:grayscale(.5);opacity:.6':''}">
         <div class="glass-pill glass-pill-cat" style="position:absolute;top:14px;left:14px">${p.category}</div>
         <div class="glass-pill glass-pill-match" style="position:absolute;top:14px;right:14px">${p.match_score||70}% match</div>
+        ${oos?'<div class="oos-overlay">Sin stock</div>':''}
       </div>
       <div class="pd-body">
         ${p.brand?`<div class="mini" style="font-weight:700;text-transform:uppercase;letter-spacing:.03em">${p.brand}</div>`:''}
@@ -750,12 +774,17 @@ function renderProductDetailModal(){
           <span class="price" style="font-size:22px">${fmtMoney(p.price)}</span>
           ${p.original_price>p.price?`<span class="price-orig">${fmtMoney(p.original_price)}</span>`:''}
         </div>
-        <div class="qty-row" style="margin-bottom:18px">
-          <button class="qty-btn" onclick="changeDetailQty(-1)">−</button>
-          <span class="qty-val" id="pd-qty-val">${productDetail.qty}</span>
-          <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
-        </div>
-        <button class="btn btn-primary btn-block" onclick="addDetailToCart()"><i data-lucide="shopping-cart" class="icon" style="width:16px;height:16px"></i>Agregar al carrito</button>
+        ${lowStock?`<p class="mini" style="color:#c0362c;font-weight:700;margin:-10px 0 14px">¡Últimas ${p.stock} unidades!</p>`:''}
+        ${oos ? `
+          <button class="btn btn-outline btn-block" disabled style="opacity:.6;cursor:not-allowed">Sin stock disponible</button>
+        ` : `
+          <div class="qty-row" style="margin-bottom:18px">
+            <button class="qty-btn" onclick="changeDetailQty(-1)">−</button>
+            <span class="qty-val" id="pd-qty-val">${productDetail.qty}</span>
+            <button class="qty-btn" onclick="changeDetailQty(1)">+</button>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addDetailToCart()"><i data-lucide="shopping-cart" class="icon" style="width:16px;height:16px"></i>Agregar al carrito</button>
+        `}
       </div>
     </div>`;
   document.body.appendChild(wrap);
@@ -1058,11 +1087,13 @@ function adminProductos(){
     <button class="btn btn-primary btn-sm" onclick="openProductModal('new')"><i data-lucide="plus" class="icon" style="width:14px;height:14px"></i>Nuevo producto</button>
   </div>
   <div class="table-scroll"><table class="admin-table">
-    <thead><tr><th></th><th>Título</th><th>Categoría</th><th>Precio</th><th>Match</th><th>Estado</th><th></th></tr></thead>
+    <thead><tr><th></th><th>Título</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Match</th><th>Estado</th><th></th></tr></thead>
     <tbody>
       ${list.map(p=>`<tr>
         <td><img src="${p.image_url}" style="width:36px;height:36px;object-fit:cover;border-radius:8px"></td>
-        <td>${p.title}</td><td>${p.category}</td><td>${fmtMoney(p.price)}</td><td>${p.match_score||''}%</td>
+        <td>${p.title}</td><td>${p.category}</td><td>${fmtMoney(p.price)}</td>
+        <td>${p.track_stock ? (p.stock>0 ? `<span class="${p.stock<=3?'badge-off':'badge-ok'}">${p.stock}</span>` : `<span class="badge-off" style="color:#c0362c">Sin stock</span>`) : `<span class="mini">Sin límite</span>`}</td>
+        <td>${p.match_score||''}%</td>
         <td>${p.active? '<span class="badge-ok">Activo</span>':'<span class="badge-off">Inactivo</span>'}</td>
         <td style="white-space:nowrap"><button class="icon-btn" onclick='openProductModal("edit", ${JSON.stringify(p).replace(/'/g,"&#39;")})'><i data-lucide="pencil" class="icon" style="width:15px;height:15px"></i></button>
         <button class="icon-btn" onclick="deleteProduct('${p.id}')"><i data-lucide="trash-2" class="icon" style="width:15px;height:15px;color:#c0362c"></i></button></td>
@@ -1119,7 +1150,7 @@ async function handleProductImageUpload(inputEl){
   }
 }
 function openProductModal(mode, product){
-  adminModal = {mode, product: product || {id:uid(), title:'', brand:'', category:'Tecnología', price:0, original_price:0, match_score:80, image_url:'', sort_order: (allDemoProducts().length+1), active:true}};
+  adminModal = {mode, product: product || {id:uid(), title:'', brand:'', category:'Tecnología', price:0, original_price:0, match_score:80, image_url:'', sort_order: (allDemoProducts().length+1), active:true, track_stock:false, stock:0}};
   render();
 }
 function closeModal(){ adminModal=null; render(); }
@@ -1157,12 +1188,25 @@ function adminModalHTML(){
         <input id="pm-image" value="${p.image_url}" placeholder="...o pegá una URL de imagen" style="margin-top:8px" oninput="updateImagePreview(this.value)">
       </div>
       <div class="toggle-row"><span class="mini" style="font-weight:700;color:var(--text)">Activo</span><button class="switch ${p.active?'on':''}" id="pm-active" onclick="this.classList.toggle('on')"></button></div>
+      <div class="toggle-row">
+        <span class="mini" style="font-weight:700;color:var(--text)">Controlar stock</span>
+        <button class="switch ${p.track_stock?'on':''}" id="pm-track-stock" onclick="this.classList.toggle('on'); toggleStockField()"></button>
+      </div>
+      <div class="field" id="pm-stock-field" style="display:${p.track_stock?'block':'none'}">
+        <label>Cantidad en stock</label>
+        <input id="pm-stock" type="number" min="0" value="${p.stock||0}">
+        <p class="mini" style="margin-top:4px">Con 0, el producto se muestra como "Sin stock" y no se puede agregar al carrito.</p>
+      </div>
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="btn btn-outline btn-block" onclick="closeModal()">Cancelar</button>
         <button class="btn btn-primary btn-block" onclick="saveProduct()">Guardar</button>
       </div>
     </div>
   </div>`;
+}
+function toggleStockField(){
+  const on = $('#pm-track-stock').classList.contains('on');
+  $('#pm-stock-field').style.display = on ? 'block' : 'none';
 }
 async function saveProduct(){
   const p = adminModal.product;
@@ -1172,7 +1216,8 @@ async function saveProduct(){
     title: $('#pm-title').value, brand: $('#pm-brand').value, category: $('#pm-category').value,
     price: Number($('#pm-price').value||0), original_price: Number($('#pm-original').value||0),
     match_score: Number($('#pm-match').value||80), sort_order: Number($('#pm-sort').value||1),
-    image_url: $('#pm-image').value, active: $('#pm-active').classList.contains('on')
+    image_url: $('#pm-image').value, active: $('#pm-active').classList.contains('on'),
+    track_stock: $('#pm-track-stock').classList.contains('on'), stock: Number($('#pm-stock')?.value||0)
   };
   if(HAS_SUPABASE){
     try{
@@ -1250,7 +1295,8 @@ function parseCSV(text){
       id: uid(), title:obj.title, brand:obj.brand, category:obj.category,
       price:Number(obj.price||0), original_price:Number(obj.original_price||0),
       match_score:Number(obj.match_score||80), image_url:obj.image_url,
-      sort_order:Number(obj.sort_order||1), active: obj.active!=='false' && obj.active!=='0'
+      sort_order:Number(obj.sort_order||1), active: obj.active!=='false' && obj.active!=='0',
+      track_stock: obj.track_stock==='true' || obj.track_stock==='1', stock: Number(obj.stock||0)
     };
   });
 }

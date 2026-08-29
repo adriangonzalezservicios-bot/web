@@ -1,4 +1,4 @@
-title,brand,category,price,original_price,match_score,image_url,sort_order,active
-Ejemplo Auriculares Bluetooth,AKARI,Tecnología,24999,32999,95,https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600,1,true
-Ejemplo Set de tazas,Casa Nova,Hogar,9999,0,80,https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600,2,true
-Ejemplo Mochila urbana,UrbanGo,Accesorios,21999,26999,90,https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600,3,true
+title,brand,category,price,original_price,match_score,image_url,sort_order,active,track_stock,stock
+Ejemplo Auriculares Bluetooth,AKARI,Tecnología,24999,32999,95,https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600,1,true,true,15
+Ejemplo Set de tazas,Casa Nova,Hogar,9999,0,80,https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600,2,true,false,0
+Ejemplo Mochila urbana,UrbanGo,Accesorios,21999,26999,90,https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600,3,true,true,0
