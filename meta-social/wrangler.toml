@@ -1,0 +1,9 @@
+name = "akari-social-publish-worker"
+main = "worker-publish-product.js"
+compatibility_date = "2024-11-01"
+
+# Los secrets (META_ACCESS_TOKEN, FB_PAGE_ID, IG_BUSINESS_ID) NO van acá.
+# Configuralos con:
+#   wrangler secret put META_ACCESS_TOKEN
+#   wrangler secret put FB_PAGE_ID
+#   wrangler secret put IG_BUSINESS_ID

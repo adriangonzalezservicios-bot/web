@@ -104,7 +104,8 @@ const DEFAULT_SETTINGS = {
   pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
   whatsapp:'', email:'', currency:'ARS',
   live_active:true, live_title:'Facebook Live: nuevos ingresos de la semana', live_when:'Viernes 19:00 hs', live_url:'',
-  instagram_url:'', facebook_url:'', tiktok_url:''
+  instagram_url:'', facebook_url:'', tiktok_url:'',
+  social_publish_worker_url:'', social_publish_enabled:false
 };
 
 /* ---------- 4. Estado global ---------- */
@@ -1165,6 +1166,7 @@ function adminModalHTML(){
 }
 async function saveProduct(){
   const p = adminModal.product;
+  const isNew = adminModal.mode==='new';
   const updated = {
     ...p,
     title: $('#pm-title').value, brand: $('#pm-brand').value, category: $('#pm-category').value,
@@ -1174,18 +1176,45 @@ async function saveProduct(){
   };
   if(HAS_SUPABASE){
     try{
-      if(adminModal.mode==='new') await sb('products', {method:'POST', body:JSON.stringify(updated)});
+      if(isNew) await sb('products', {method:'POST', body:JSON.stringify(updated)});
       else await sb(`products?id=eq.${p.id}`, {method:'PATCH', body:JSON.stringify(updated)});
       await loadData();
     }catch(e){ toast('Error guardando en Supabase: '+e.message); }
   } else {
     let list = allDemoProducts();
-    if(adminModal.mode==='new') list.push(updated);
+    if(isNew) list.push(updated);
     else list = list.map(x=>x.id===p.id?updated:x);
     saveDemoProducts(list);
     state.products = list.filter(x=>x.active);
   }
   toast('Producto guardado'); closeModal();
+  if(isNew && updated.active) publishProductToSocial(updated);
+}
+// Publica un producto nuevo en Facebook e Instagram (no bloquea el guardado si falla)
+async function publishProductToSocial(product){
+  const s = state.settings;
+  if(!s.social_publish_enabled || !s.social_publish_worker_url) return;
+  try{
+    const res = await fetch(s.social_publish_worker_url, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        title: product.title, price: product.price, image_url: product.image_url,
+        category: product.category,
+        product_url: window.location.origin + window.location.pathname + '#/productos'
+      })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(data.success){
+      const okOn = [data.results?.facebook?.ok && 'Facebook', data.results?.instagram?.ok && 'Instagram'].filter(Boolean).join(' y ');
+      toast(`Publicado en ${okOn} ✔`);
+    } else {
+      const reasons = [data.results?.facebook?.error, data.results?.instagram?.error].filter(Boolean).join(' / ');
+      toast('No se pudo publicar en redes: ' + (reasons || 'error desconocido'));
+    }
+  }catch(e){
+    toast('No se pudo conectar con el publicador de redes');
+    console.warn('publishProductToSocial error:', e.message);
+  }
 }
 async function deleteProduct(id){
   if(!confirm('¿Eliminar este producto?')) return;
@@ -1426,6 +1455,12 @@ function adminStore(){
     <div class="field"><label>Instagram (URL completa)</label><input id="sc-instagram" value="${s.instagram_url||''}" placeholder="https://instagram.com/tu_cuenta"></div>
     <div class="field"><label>Facebook (URL completa)</label><input id="sc-facebook" value="${s.facebook_url||''}" placeholder="https://facebook.com/tu_pagina"></div>
     <div class="field"><label>TikTok (URL completa)</label><input id="sc-tiktok" value="${s.tiktok_url||''}" placeholder="https://tiktok.com/@tu_cuenta"></div>
+    <div class="toggle-row" style="margin-top:6px">
+      <div><span class="mini" style="font-weight:700;color:var(--text)">Publicar productos nuevos automáticamente</span><div class="mini">Cuando cargás un producto, se publica solo en Facebook e Instagram</div></div>
+      <button class="switch ${s.social_publish_enabled?'on':''}" id="sc-publish-enabled" onclick="this.classList.toggle('on')"></button>
+    </div>
+    <div class="field" style="margin-top:10px"><label>Worker de publicación automática (URL)</label><input id="sc-publish-worker" value="${s.social_publish_worker_url||''}" placeholder="https://akari-social-publish-worker.tu-usuario.workers.dev"></div>
+    <p class="mini">Ver <code>meta-social/README.md</code> del proyecto para el paso a paso de cómo conseguir esta URL.</p>
   </div>
   <button class="btn btn-primary" onclick="saveStore()">Guardar cambios</button>`;
 }
@@ -1435,7 +1470,8 @@ async function saveStore(){
     whatsapp: $('#st-wa').value, email: $('#st-email').value, currency: $('#st-currency').value,
     live_active: $('#lv-active').classList.contains('on'), live_title: $('#lv-title').value,
     live_when: $('#lv-when').value, live_url: $('#lv-url').value,
-    instagram_url: $('#sc-instagram').value, facebook_url: $('#sc-facebook').value, tiktok_url: $('#sc-tiktok').value
+    instagram_url: $('#sc-instagram').value, facebook_url: $('#sc-facebook').value, tiktok_url: $('#sc-tiktok').value,
+    social_publish_enabled: $('#sc-publish-enabled').classList.contains('on'), social_publish_worker_url: $('#sc-publish-worker').value
   });
   toast('Tienda actualizada');
 }

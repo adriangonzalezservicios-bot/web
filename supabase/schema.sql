@@ -48,7 +48,9 @@ create table if not exists public.site_settings (
   instagram_url text default '',
   facebook_url text default '',
   tiktok_url text default '',
-  banner_url text default ''
+  banner_url text default '',
+  social_publish_worker_url text default '',
+  social_publish_enabled boolean default false
 );
 
 insert into public.site_settings (id) values (1)
