@@ -114,6 +114,35 @@ create policy "auth update orders" on public.orders
   for update using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 -- ============================================================
+-- ============================================================
+-- Estadísticas privadas del sitio (contador de visitas)
+-- ============================================================
+create table if not exists public.site_stats (
+  id int primary key default 1,
+  total_visits bigint default 0,
+  updated_at timestamptz default now()
+);
+insert into public.site_stats (id) values (1) on conflict (id) do nothing;
+
+alter table public.site_stats enable row level security;
+
+drop policy if exists "auth read site stats" on public.site_stats;
+create policy "auth read site stats" on public.site_stats
+  for select using (auth.role() = 'authenticated');
+
+-- Función segura: solo permite sumar +1, nunca leer ni escribir otra cosa.
+-- Se llama desde el front con la clave anon cada vez que alguien abre el sitio.
+create or replace function public.increment_site_visits()
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.site_stats set total_visits = total_visits + 1, updated_at = now() where id = 1;
+$$;
+
+grant execute on function public.increment_site_visits() to anon, authenticated;
+
 -- Datos de ejemplo (opcional, comentar si no se desea)
 -- ============================================================
 insert into public.products (id, title, brand, category, price, original_price, match_score, image_url, sort_order, active) values

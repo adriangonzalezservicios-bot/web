@@ -120,6 +120,7 @@ const state = {
   drawerOpen: false,
   productFilter: 'Todas',
   lastOrder: lsGet('akari_last_order', null),
+  siteStats: null,
 };
 
 /* ---------- 5. Cliente Supabase minimal (REST) — solo si hay claves ---------- */
@@ -1029,7 +1030,7 @@ function viewAdmin(){
   return `
   <div class="section-head"><h2>Panel de administración</h2><button class="btn btn-outline btn-sm" onclick="adminLogout()"><i data-lucide="log-out" class="icon" style="width:14px;height:14px"></i>Salir</button></div>
   <div class="admin-tabs">
-    ${['productos','carga masiva','diseño','pagos','pedidos','tienda'].map(t=>`<button class="admin-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')}
+    ${['productos','carga masiva','diseño','pagos','pedidos','tienda','estadísticas'].map(t=>`<button class="admin-tab ${adminTab===t?'active':''}" onclick="setAdminTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')}
   </div>
   <div id="admin-tab-content">${adminTabContent()}</div>
   ${adminModal ? adminModalHTML() : ''}
@@ -1066,7 +1067,11 @@ async function adminLogin(){
   }
 }
 function adminLogout(){ state.session=null; lsSet('akari_admin_session', null); render(); }
-function setAdminTab(t){ adminTab=t; render(); }
+function setAdminTab(t){
+  adminTab=t;
+  if(t==='estadísticas' && !state.siteStats) loadSiteStats().then(render);
+  render();
+}
 
 function adminTabContent(){
   if(adminTab==='productos') return adminProductos();
@@ -1075,7 +1080,39 @@ function adminTabContent(){
   if(adminTab==='pagos') return adminPayments();
   if(adminTab==='pedidos') return adminOrders();
   if(adminTab==='tienda') return adminStore();
+  if(adminTab==='estadísticas') return adminStats();
   return '';
+}
+
+/* -- Estadísticas -- */
+function adminStats(){
+  const s = state.siteStats;
+  if(!HAS_SUPABASE){
+    return `<div class="empty-state">El contador de visitas necesita Supabase conectado (no funciona en modo demo).</div>`;
+  }
+  if(!s){
+    return `<div class="empty-state">Cargando estadísticas...</div>`;
+  }
+  return `
+  <div class="admin-card" style="text-align:center;padding:32px 20px">
+    <div class="mini" style="text-transform:uppercase;letter-spacing:.05em;font-weight:700">Visitas totales</div>
+    <div style="font-size:42px;font-weight:800;color:var(--brand-dark);margin:8px 0">${(s.total_visits||0).toLocaleString('es-AR')}</div>
+    <div class="mini">Última visita: ${s.updated_at ? new Date(s.updated_at).toLocaleString('es-AR') : '—'}</div>
+    <button class="btn btn-outline btn-sm" style="margin-top:16px" onclick="refreshSiteStats()"><i data-lucide="refresh-cw" class="icon" style="width:14px;height:14px"></i>Actualizar</button>
+  </div>
+  <p class="mini">Se suma 1 cada vez que alguien abre el sitio. Es un conteo simple de cargas de página, no de visitantes únicos (si la misma persona entra varias veces, cuenta varias veces).</p>
+  `;
+}
+async function refreshSiteStats(){
+  await loadSiteStats();
+  render();
+}
+async function loadSiteStats(){
+  if(!HAS_SUPABASE || !state.session) return;
+  try{
+    const rows = await sb('site_stats?select=*&id=eq.1');
+    if(rows && rows[0]) state.siteStats = rows[0];
+  }catch(e){ console.warn('No se pudieron cargar las estadísticas:', e.message); }
 }
 
 /* -- Productos CRUD -- */
@@ -1574,7 +1611,17 @@ function dismissSwipeHint(){
 (async function init(){
   await loadData();
   render();
+  incrementSiteVisits();
 })();
+function incrementSiteVisits(){
+  if(!HAS_SUPABASE) return;
+  // Fire-and-forget: no debe frenar ni afectar la carga del sitio si falla
+  fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_site_visits`, {
+    method:'POST',
+    headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':`Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' },
+    body:'{}'
+  }).catch(()=>{});
+}
 </script>
 </body>
 </html>
