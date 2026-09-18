@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#6b8f35">
+<meta name="theme-color" content="#18181b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -100,7 +100,7 @@ const DEMO_PRODUCTS = [
 ];
 const DEFAULT_SETTINGS = {
   brand_name:'AKARI', brand_tagline:'electro & home',
-  color_brand:'#6b8f35', color_bg:'#f6f7f9', color_text:'#0f1218', logo_url:'', banner_url:'',
+  color_brand:'#18181b', color_bg:'#ffffff', color_text:'#18181b', logo_url:'', banner_url:'',
   hero_title:'Descubrí productos que sí te van a gustar',
   hero_text:'Deslizá tecnología, hogar y accesorios como en tu red favorita. AKARI aprende de cada Me gusta para mostrarte más de lo que buscás — y menos de lo que no.',
   pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
@@ -163,9 +163,9 @@ function saveDemoProducts(list){ lsSet('akari_demo_products', list); }
 function saveDemoSettings(s){ lsSet('akari_demo_settings', s); }
 
 function applyTheme(){
-  document.documentElement.style.setProperty('--brand', state.settings.color_brand || '#6b8f35');
+  document.documentElement.style.setProperty('--brand', state.settings.color_brand || '#18181b');
   // color-dark aproximado: mismo tono, solo lo usamos con brand por simplicidad
-  document.documentElement.style.setProperty('--brand-dark', state.settings.color_brand || '#587529');
+  document.documentElement.style.setProperty('--brand-dark', state.settings.color_brand || '#000000');
   document.documentElement.style.setProperty('--bg', state.settings.color_bg || '#f6f7f9');
   document.documentElement.style.setProperty('--text', state.settings.color_text || '#0f1218');
 }
@@ -394,7 +394,7 @@ function isActive(href){ return (state.route==='#/' ? '#/' : state.route) === hr
 
 function brandMarkHTML(){
   const s = state.settings;
-  const src = s.logo_url || './logo-mascot-icon-512.png';
+  const src = s.logo_url || './akari-wordmark.png';
   return `<div class="brand-mark brand-mark-img"><img src="${src}" alt="${s.brand_name}" onerror="this.parentElement.textContent='${(s.brand_name||'A')[0]}'; this.parentElement.classList.remove('brand-mark-img');"></div>`;
 }
 function shellHTML(innerHTML){
@@ -405,7 +405,7 @@ function shellHTML(innerHTML){
   <aside class="sidebar">
     <div class="brand-row">
       ${brandMarkHTML()}
-      <div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div>
+      <div class="brand-tag">${s.brand_tagline}</div>
     </div>
     <div class="search-box"><i data-lucide="search" class="icon" style="color:var(--muted)"></i><input id="search-input-desk" placeholder="Buscar productos..." value=""></div>
     <nav>
@@ -416,13 +416,13 @@ function shellHTML(innerHTML){
 
   <div class="topbar">
     <button class="icon-btn" onclick="toggleDrawer(true)"><i data-lucide="menu" class="icon"></i></button>
-    <div class="brand-row">${brandMarkHTML()}<div class="brand-name">${s.brand_name}</div></div>
+    <div class="brand-row">${brandMarkHTML()}</div>
     <div style="flex:1"></div>
     <a class="icon-btn" href="#/carrito" style="position:relative"><i data-lucide="shopping-cart" class="icon"></i></a>
   </div>
   <div class="drawer-backdrop ${state.drawerOpen?'open':''}" onclick="toggleDrawer(false)"></div>
   <div class="drawer ${state.drawerOpen?'open':''}">
-    <div class="brand-row">${brandMarkHTML()}<div><div class="brand-name">${s.brand_name}</div><div class="brand-tag">${s.brand_tagline}</div></div></div>
+    <div class="brand-row">${brandMarkHTML()}<div class="brand-tag">${s.brand_tagline}</div></div>
     <nav>${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}" onclick="toggleDrawer(false)"><i data-lucide="${n.icon}" class="icon"></i>${n.label}</a>`).join('')}</nav>
   </div>
 
@@ -460,12 +460,12 @@ function footerHTML(){
   <footer>
     <div class="footer-inner">
       <div>
-        <div class="brand-row" style="padding-bottom:8px">${brandMarkHTML()}<div class="brand-name">${s.brand_name}</div></div>
+        <div class="brand-row" style="padding-bottom:8px">${brandMarkHTML()}</div>
         <p class="mini" style="max-width:32ch;line-height:1.5">Tienda de descubrimiento de tecnología, hogar y accesorios. Deslizá, descubrí, comprá.</p>
         ${socialLinksHTML()}
       </div>
       <div><h4>Tienda</h4>
-        <a href="#/productos">Productos</a><a href="#/">Para ti</a><a href="#/vivo">En vivo</a>
+        <a href="#/productos">Productos</a><a href="#/">Para vos</a><a href="#/vivo">En vivo</a>
       </div>
       <div><h4>Ayuda</h4>
         <a href="#/contacto">Contacto</a><a href="#/carrito">Mi carrito</a>
@@ -511,8 +511,8 @@ function viewHome(){
   </div>
 
   <section class="block reveal" id="feed-section">
-    <div class="section-head"><h2>Para ti</h2><span class="mini">Deslizá para descubrir</span></div>
-    ${feedHTML()}
+    <div class="section-head"><h2>Para vos</h2><span class="mini">Según tus gustos</span></div>
+    ${paraVosHTML()}
   </section>
 
   <section class="block reveal">
@@ -523,7 +523,7 @@ function viewHome(){
   <section class="block reveal">
     <div class="seo-text">
       <h2>Tecnología, hogar y accesorios que se adaptan a vos</h2>
-      <p>${s.brand_name} ${s.brand_tagline} es una tienda online pensada para que descubras productos de <strong>tecnología</strong>, <strong>hogar</strong> y <strong>accesorios</strong> sin perder tiempo filtrando catálogos interminables. Deslizá en nuestro feed «Para ti», indicá qué te gusta y qué no, y dejá que el sistema arme sugerencias cada vez más precisas para tu categoría, marca y rango de precio favoritos.</p>
+      <p>${s.brand_name} ${s.brand_tagline} es una tienda online pensada para que descubras productos de <strong>tecnología</strong>, <strong>hogar</strong> y <strong>accesorios</strong> sin perder tiempo filtrando catálogos interminables. La sección «Para vos» aprende de lo que agregás al carrito y arma sugerencias cada vez más precisas para tu categoría, marca y rango de precio favoritos.</p>
       <h3>Comprá con confianza</h3>
       <p>Pagá con Mercado Pago, coordiná un pago a convenir o aboná en el retiro en tienda. Elegí envío a domicilio o retiro sin costos ocultos. Todos los pedidos quedan registrados y podés seguir el estado por WhatsApp.</p>
       <p><a href="#/productos">Ver catálogo completo</a> · <a href="#/vivo">Próximo Live</a> · <a href="#/contacto">Hablar con nosotros</a></p>
@@ -537,171 +537,19 @@ function marqueeItemsHTML(){
     { icon:'credit-card', text:'Hasta 12 cuotas con Mercado Pago' },
     { icon:'truck', text:'Envío a todo el país' },
     { icon:'store', text:'Retiro en tienda sin cargo' },
-    { icon:'heart', text:'El feed aprende lo que te gusta' },
+    { icon:'heart', text:'Aprendemos lo que te gusta' },
   ];
   return items.map(i=>`<span class="marquee-item"><i data-lucide="${i.icon}" class="icon" style="width:15px;height:15px"></i>${i.text}</span>`).join('');
 }
 
-/* ---------- 11. Feed swipe / carrusel ---------- */
-let feedState = { items: [], index: 0 };
-function feedHTML(){
-  feedState.items = buildFeed();
-  if(!feedState.items.length) return `<div class="feed-empty">Todavía no hay productos para mostrarte. Volvé pronto.</div>`;
-  feedState.index = 0;
-  return `
-  <div class="feed-wrap">
-    <div class="feed-stage-wrap">
-      <div class="feed-stage" id="feed-stage"></div>
-      <div class="swipe-hint" id="swipe-hint"><i data-lucide="move-horizontal" class="icon"></i>Deslizá para decidir</div>
-    </div>
-    <div class="feed-actions">
-      <button class="round-btn skip" onclick="feedAction('skip')" title="Saltar"><i data-lucide="x" class="icon"></i></button>
-      <button class="round-btn like" onclick="feedAction('like')" title="Me gusta"><i data-lucide="heart" class="icon"></i></button>
-      <button class="round-btn add" onclick="feedAction('cart')" title="Agregar"><i data-lucide="shopping-cart" class="icon"></i></button>
-    </div>
-  </div>
-  <div class="section-head" style="margin-top:26px"><h2 style="font-size:15px">Sugeridos para vos</h2></div>
-  <div class="suggested-strip" id="suggested-strip"></div>
-  `;
-}
-// Monta el carrusel desde cero (primera carga, o cuando se reinician las sugerencias)
-function renderFeedStage(){
-  const stage = $('#feed-stage');
-  if(!stage) return;
-  stage.innerHTML='';
-  const current = feedState.items[feedState.index];
-  if(!current){ stage.innerHTML = `<div class="feed-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);border-radius:24px">Reiniciando sugerencias...</div>`; icons(); setTimeout(()=>{feedState.index=0; renderFeedStage();},900); return; }
-  const prev = feedState.index>0 ? feedState.items[feedState.index-1] : null;
-  const next = feedState.items[feedState.index+1] || null;
-
-  if(prev) stage.appendChild(buildCarouselCard(prev, 'carousel-left'));
-  const centerCard = buildCarouselCard(current, 'carousel-center');
-  stage.appendChild(centerCard);
-  if(next) stage.appendChild(buildCarouselCard(next, 'carousel-right'));
-
-  attachDrag(centerCard, current);
-  renderSuggestedStrip();
-  icons();
-}
-function buildCarouselCard(p, extraClass){
-  const card = document.createElement('div');
-  card.className = 'swipe-card site-style-card ' + extraClass;
-  card.dataset.id = p.id;
-  card.innerHTML = `
-    <div class="swipe-stamp like">ME GUSTA</div>
-    <div class="swipe-stamp skip">PASO</div>
-    <div class="match-badge">${p.match_score||70}%</div>
-    <div class="cc-media"><img src="${p.image_url}" alt="${p.title}"></div>
-    <div class="cc-body">
-      <div class="cat">${p.category}</div>
-      <div class="cc-title">${p.title}</div>
-      <div class="price">${fmtMoney(p.price)}</div>
-    </div>
-  `;
-  return card;
-}
-// Avanza el carrusel una posición: la tarjeta central pasa a la izquierda (ya decidida),
-// la de la derecha pasa al centro, y entra una nueva tarjeta por la derecha.
-function advanceCarousel(type){
-  const stage = $('#feed-stage');
-  const current = feedState.items[feedState.index];
-  if(!stage || !current) return;
-  recordSignal(current, type);
-
-  const oldLeft = stage.querySelector('.carousel-left');
-  const oldCenter = stage.querySelector('.carousel-center');
-  const oldRight = stage.querySelector('.carousel-right');
-
-  // La tarjeta vieja de la izquierda (ya decidida hace un paso) termina de salir de escena
-  if(oldLeft){
-    oldLeft.classList.remove('carousel-left');
-    oldLeft.classList.add('carousel-exit-left');
-    setTimeout(()=>oldLeft.remove(), 420);
-  }
-  // La central (recién decidida) pasa a ocupar el lugar de la izquierda
-  if(oldCenter){
-    oldCenter.classList.remove('carousel-center');
-    oldCenter.classList.add('carousel-left');
-    oldCenter.style.transform = '';
-    oldCenter.style.left = '';
-    oldCenter.style.transition = '';
-    oldCenter.style.pointerEvents = 'none';
-  }
-  // La de la derecha pasa a ser la nueva protagonista
-  if(oldRight){
-    oldRight.classList.remove('carousel-right');
-    oldRight.classList.add('carousel-center');
-    attachDrag(oldRight, feedState.items[feedState.index+1]);
-  }
-
-  feedState.index++;
-  const newNext = feedState.items[feedState.index+1];
-  if(newNext){
-    const newCard = buildCarouselCard(newNext, 'carousel-right carousel-enter');
-    stage.appendChild(newCard);
-    requestAnimationFrame(()=>{ newCard.classList.remove('carousel-enter'); });
-  }
-
-  if(!feedState.items[feedState.index]){
-    setTimeout(()=>{ feedState.index=0; renderFeedStage(); }, 450);
-  }
-  renderSuggestedStrip();
-}
-function attachDrag(card, product){
-  let startX=0, startY=0, dx=0, dragging=false;
-  const likeStamp = card.querySelector('.swipe-stamp.like');
-  const skipStamp = card.querySelector('.swipe-stamp.skip');
-  function onDown(x,y){ dragging=true; startX=x; startY=y; card.style.transition='none'; card.style.cursor='grabbing'; dismissSwipeHint(); }
-  function onMove(x,y){
-    if(!dragging) return;
-    dx = x-startX;
-    const rot = dx/18;
-    card.style.transform = `translateX(-50%) translate(${dx}px, ${(y-startY)*.15}px) rotate(${rot}deg)`;
-    likeStamp.style.opacity = Math.min(Math.max(-dx/80,0),1);
-    skipStamp.style.opacity = Math.min(Math.max(dx/80,0),1);
-  }
-  function onUp(){
-    if(!dragging) return; dragging=false; card.style.cursor='grab';
-    card.style.transition='transform .4s cubic-bezier(.22,1,.36,1), left .4s cubic-bezier(.22,1,.36,1), opacity .4s ease';
-    if(dx<-110){ advanceCarousel('like'); }
-    else if(dx>110){ advanceCarousel('skip'); }
-    else { card.style.transform=''; likeStamp.style.opacity=0; skipStamp.style.opacity=0; }
-    dx=0;
-  }
-  card.addEventListener('mousedown', e=>onDown(e.clientX,e.clientY));
-  window.addEventListener('mousemove', e=>onMove(e.clientX,e.clientY));
-  window.addEventListener('mouseup', onUp);
-  card.addEventListener('touchstart', e=>{const t=e.touches[0]; onDown(t.clientX,t.clientY);}, {passive:true});
-  card.addEventListener('touchmove', e=>{const t=e.touches[0]; onMove(t.clientX,t.clientY);}, {passive:true});
-  card.addEventListener('touchend', onUp);
-}
-function feedAction(type){
-  const p = feedState.items[feedState.index];
-  if(!p) return;
-  dismissSwipeHint();
-  if(type==='cart') addToCart(p,1);
-  advanceCarousel(type==='cart' ? 'like' : type);
-}
-function renderSuggestedStrip(){
-  const strip = $('#suggested-strip');
-  if(!strip) return;
-  const prefs = loadPrefs();
-  const topCat = Object.entries(prefs.categories)
-    .map(([k,v])=>[k, decayedValue(v)])
-    .sort((a,b)=>b[1]-a[1])[0]?.[0];
-  const hasPriceData = prefs.priceCount >= 2;
-  const list = [...state.products].filter(p=>!isOutOfStock(p)).sort((a,b)=>scoreProduct(b,prefs)-scoreProduct(a,prefs)).slice(0,10);
-  strip.innerHTML = list.map(p=>{
-    let why = 'Recomendado';
-    if(topCat && p.category===topCat) why = `Por ${topCat}`;
-    else if(hasPriceData && priceFit(p.price, prefs) > 0.75) why = 'En tu rango de precio';
-    else if(!prefs.seen[p.id]) why = 'Nuevo para vos';
-    return `<a class="sugg-card" href="#" onclick="event.preventDefault(); openProductDetail('${p.id}')">
-      <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy"></div>
-      <div class="why">${why}</div>
-      <div class="title">${p.title}</div>
-    </a>`;
-  }).join('');
+/* ---------- 11. Para vos: grilla basada en el motor de recomendación ---------- */
+// Ya no es un feed swipe: es una grilla común, pero el orden sigue viniendo
+// del mismo motor de preferencias (categoría/marca/precio con decaimiento),
+// que ahora aprende solo de lo que agregás al carrito.
+function paraVosHTML(){
+  const items = buildFeed().filter(p=>!isOutOfStock(p)).slice(0,8);
+  if(!items.length) return `<div class="empty-state">Todavía no hay productos para mostrarte. Volvé pronto.</div>`;
+  return `<div class="grid-products">${items.map(productCardHTML).join('')}</div>`;
 }
 
 /* ---------- 12. Producto card ---------- */
@@ -1585,7 +1433,7 @@ function render(){
   const route = state.route.split('?')[0];
   document.getElementById('app').innerHTML = shellHTML(currentView());
   icons();
-  if(route==='#/' || route==='') { renderFeedStage(); initScrollReveal(); }
+  if(route==='#/' || route==='') { initScrollReveal(); }
   if(route==='#/checkout') syncCheckoutInputs();
 }
 function initScrollReveal(){
@@ -1602,11 +1450,6 @@ function initScrollReveal(){
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
   els.forEach(el=>io.observe(el));
 }
-function dismissSwipeHint(){
-  const hint = $('#swipe-hint');
-  if(hint) hint.remove();
-}
-
 /* ---------- 21. Init ---------- */
 (async function init(){
   await loadData();
