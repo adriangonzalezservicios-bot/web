@@ -13,12 +13,12 @@
 <link rel="preconnect" href="https://images.unsplash.com">
 <link rel="preconnect" href="https://khlsqzwtauctaqtqmuxd.supabase.co">
 <title>AKARI Electro & Home — Tecnología, hogar y accesorios</title>
-<meta name="description" content="Descubrí tecnología, hogar y accesorios deslizando: AKARI aprende lo que te gusta. Comprá con Mercado Pago, envío a domicilio o retiro en tienda.">
+<meta name="description" content="Descubrí tecnología, hogar y accesorios seleccionados por diseño y calidad. Comprá con Mercado Pago, envío a domicilio o retiro en tienda.">
 <link rel="canonical" href="https://akari.com.ar/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AKARI Electro & Home">
 <meta property="og:title" content="AKARI Electro & Home — Tecnología, hogar y accesorios">
-<meta property="og:description" content="Tienda discovery: deslizá, descubrí y comprá productos de tecnología, hogar y accesorios pensados para vos.">
+<meta property="og:description" content="Catálogo de tecnología, hogar y accesorios seleccionados por diseño y calidad, pensados para vos.">
 <meta property="og:image" content="https://akari.com.ar/akari-logo-full.png">
 <meta property="og:image:width" content="1366">
 <meta property="og:image:height" content="554">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="https://akari.com.ar/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AKARI Electro & Home">
-<meta name="twitter:description" content="Descubrí tecnología, hogar y accesorios deslizando. AKARI aprende tus gustos.">
+<meta name="twitter:description" content="Descubrí tecnología, hogar y accesorios seleccionados por diseño y calidad.">
 <meta name="twitter:image" content="https://akari.com.ar/akari-logo-full.png">
 <link rel="icon" href="./logo-mascot.png">
 <script type="application/ld+json">
@@ -100,9 +100,9 @@ const DEMO_PRODUCTS = [
 ];
 const DEFAULT_SETTINGS = {
   brand_name:'AKARI', brand_tagline:'electro & home',
-  color_brand:'#18181b', color_bg:'#ffffff', color_text:'#18181b', logo_url:'', banner_url:'',
-  hero_title:'Descubrí productos que sí te van a gustar',
-  hero_text:'Deslizá tecnología, hogar y accesorios como en tu red favorita. AKARI aprende de cada Me gusta para mostrarte más de lo que buscás — y menos de lo que no.',
+  color_brand:'#18181b', color_bg:'#fbfbf9', color_text:'#18181b', logo_url:'', banner_url:'',
+  hero_title:'Electro y hogar que elevan tu día a día',
+  hero_text:'Seleccionamos cada producto por diseño y calidad. Descubrí tecnología, hogar y accesorios pensados para durar, con envío a todo el país y pagos con Mercado Pago.',
   pay_mp:true, pay_agree:true, pay_store:true, mp_mode:'test', mp_public_key:'', mp_worker_url:'',
   whatsapp:'', email:'', currency:'ARS',
   live_active:true, live_title:'Facebook Live: nuevos ingresos de la semana', live_when:'Viernes 19:00 hs', live_url:'',
@@ -166,8 +166,8 @@ function applyTheme(){
   document.documentElement.style.setProperty('--brand', state.settings.color_brand || '#18181b');
   // color-dark aproximado: mismo tono, solo lo usamos con brand por simplicidad
   document.documentElement.style.setProperty('--brand-dark', state.settings.color_brand || '#000000');
-  document.documentElement.style.setProperty('--bg', state.settings.color_bg || '#f6f7f9');
-  document.documentElement.style.setProperty('--text', state.settings.color_text || '#0f1218');
+  document.documentElement.style.setProperty('--bg', state.settings.color_bg || '#fbfbf9');
+  document.documentElement.style.setProperty('--text', state.settings.color_text || '#18181b');
 }
 
 /* ---------- 6. Motor de gustos v3 (localStorage: akari_prefs_v3) ---------- */
@@ -394,43 +394,63 @@ function isActive(href){ return (state.route==='#/' ? '#/' : state.route) === hr
 
 function brandMarkHTML(){
   const s = state.settings;
-  const src = s.logo_url || './akari-wordmark.png';
+  const src = s.logo_url || './logo.png';
   return `<div class="brand-mark brand-mark-img"><img src="${src}" alt="${s.brand_name}" onerror="this.parentElement.textContent='${(s.brand_name||'A')[0]}'; this.parentElement.classList.remove('brand-mark-img');"></div>`;
 }
 function shellHTML(innerHTML){
   const s = state.settings;
   const route = state.route.split('?')[0];
-  const hideFabs = route==='#/carrito' || route==='#/checkout'; // hay barra de pago fija abajo, evitamos superposición
+  const hideFabs = route==='#/carrito' || route==='#/checkout';
   return `
-  <aside class="sidebar">
-    <div class="brand-row">
-      ${brandMarkHTML()}
-      <div class="brand-tag">${s.brand_tagline}</div>
-    </div>
-    <div class="search-box"><i data-lucide="search" class="icon" style="color:var(--muted)"></i><input id="search-input-desk" placeholder="Buscar productos..." value=""></div>
-    <nav>
-      ${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}"><i data-lucide="${n.icon}" class="icon"></i>${n.label}${n.href==='#/carrito' && cartCount() ? ` <span class="mini">(${cartCount()})</span>`:''}</a>`).join('')}
-    </nav>
-    <div class="sidebar-foot"><span>© ${new Date().getFullYear()} ${s.brand_name}</span><button class="admin-dot" title="Admin" onclick="location.hash='#/admin'">·</button></div>
-  </aside>
+  <aside class="sidebar" aria-hidden="true"></aside>
 
-  <div class="topbar">
-    <button class="icon-btn" onclick="toggleDrawer(true)"><i data-lucide="menu" class="icon"></i></button>
-    <div class="brand-row">${brandMarkHTML()}</div>
-    <div style="flex:1"></div>
-    <a class="icon-btn" href="#/carrito" style="position:relative"><i data-lucide="shopping-cart" class="icon"></i></a>
-  </div>
+  <header class="topbar catalog-topbar">
+    <div class="catalog-topbar-inner">
+      <button class="icon-btn mobile-menu-btn" onclick="toggleDrawer(true)" aria-label="Abrir menú">
+        <i data-lucide="menu" class="icon"></i>
+      </button>
+
+      <a class="catalog-brand" href="#/" aria-label="AKARI inicio">
+        ${brandMarkHTML()}
+        <span class="catalog-brand-tag">${s.brand_tagline}</span>
+      </a>
+
+      <nav class="catalog-nav" aria-label="Navegación principal">
+        ${NAV_ITEMS.map(n=>`<a class="catalog-nav-link ${isActive(n.href)?'active':''}" href="${n.href}">
+          <i data-lucide="${n.icon}" class="icon"></i><span>${n.label}</span>
+          ${n.href==='#/carrito' && cartCount() ? `<span class="nav-count">${cartCount()}</span>`:''}
+        </a>`).join('')}
+      </nav>
+
+      <div class="catalog-search">
+        <i data-lucide="search" class="icon"></i>
+        <input id="search-input-desk" placeholder="Buscar productos..." aria-label="Buscar productos">
+      </div>
+
+      <a class="catalog-cart-btn" href="#/carrito" aria-label="Carrito">
+        <i data-lucide="shopping-cart" class="icon"></i>
+        ${cartCount()?`<span class="catalog-cart-count">${cartCount()}</span>`:''}
+      </a>
+    </div>
+  </header>
+
   <div class="drawer-backdrop ${state.drawerOpen?'open':''}" onclick="toggleDrawer(false)"></div>
   <div class="drawer ${state.drawerOpen?'open':''}">
     <div class="brand-row">${brandMarkHTML()}<div class="brand-tag">${s.brand_tagline}</div></div>
-    <nav>${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}" onclick="toggleDrawer(false)"><i data-lucide="${n.icon}" class="icon"></i>${n.label}</a>`).join('')}</nav>
+    <div class="search-box"><i data-lucide="search" class="icon" style="color:var(--muted)"></i><input id="search-input-mobile" placeholder="Buscar productos..."></div>
+    <nav>${NAV_ITEMS.map(n=>`<a class="nav-item ${isActive(n.href)?'active':''}" href="${n.href}" onclick="toggleDrawer(false)">
+      <i data-lucide="${n.icon}" class="icon"></i>${n.label}${n.href==='#/carrito' && cartCount() ? ` <span class="mini">(${cartCount()})</span>`:''}
+    </a>`).join('')}</nav>
   </div>
 
   <main>
     <div class="container">${innerHTML}</div>
     ${footerHTML()}
   </main>
-  ${hideFabs ? '' : `<button class="cart-fab" onclick="location.hash='#/carrito'"><i data-lucide="shopping-cart" class="icon"></i>${cartCount()?`<span class="count">${cartCount()}</span>`:''}</button>`}
+
+  ${hideFabs ? '' : `<button class="cart-fab catalog-floating-cart" onclick="location.hash='#/carrito'" aria-label="Abrir carrito">
+    <i data-lucide="shopping-cart" class="icon"></i>${cartCount()?`<span class="count">${cartCount()}</span>`:''}
+  </button>`}
   ${hideFabs ? '' : whatsappFabHTML()}
   `;
 }
@@ -461,7 +481,7 @@ function footerHTML(){
     <div class="footer-inner">
       <div>
         <div class="brand-row" style="padding-bottom:8px">${brandMarkHTML()}</div>
-        <p class="mini" style="max-width:32ch;line-height:1.5">Tienda de descubrimiento de tecnología, hogar y accesorios. Deslizá, descubrí, comprá.</p>
+        <p class="mini" style="max-width:32ch;line-height:1.5">Tecnología, hogar y accesorios seleccionados por diseño y calidad.</p>
         ${socialLinksHTML()}
       </div>
       <div><h4>Tienda</h4>
@@ -500,8 +520,16 @@ function viewHome(){
   const s = state.settings;
   const destacados = [...state.products].sort((a,b)=>(b.match_score||0)-(a.match_score||0)).slice(0,8);
   return `
-  <section class="video-banner">
-    <div class="video-frame">${bannerMediaHTML()}</div>
+  <section class="hero-wrap">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">Tecnología · Hogar · Accesorios</p>
+      <h1 class="hero-heading">${s.hero_title}</h1>
+      <p class="hero-sub">${s.hero_text}</p>
+      <a href="#/productos" class="btn btn-primary">Ver catálogo<i data-lucide="arrow-right" class="icon" style="width:15px;height:15px"></i></a>
+    </div>
+    <div class="video-banner">
+      <div class="video-frame">${bannerMediaHTML()}</div>
+    </div>
   </section>
 
   <div class="marquee">
@@ -558,6 +586,7 @@ function productCardHTML(p){
   return `
   <div class="card-prod ${oos?'card-oos':''}" onclick="openProductDetail('${p.id}')" style="cursor:pointer">
     <div class="match-badge">${p.match_score||70}%</div>
+    ${!oos && p.sort_order<=2 ? '<span class="badge-new">Nuevo</span>' : ''}
     <div class="imgwrap"><img src="${p.image_url}" alt="${p.title}" loading="lazy">${oos?'<div class="oos-overlay">Sin stock</div>':''}</div>
     <div class="body">
       <div class="cat">${p.category}</div>
